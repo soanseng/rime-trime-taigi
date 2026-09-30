@@ -20,6 +20,7 @@ sealed class SwitchOptionEntry(
             UpdateConfig,
             Keyboard,
             ThemeList,
+            TaigiGuide, // 拍台文特化：「…」面板直達說明頁
         }
     }
 

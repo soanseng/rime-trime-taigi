@@ -64,6 +64,12 @@ class SwitchOptionWindow :
                 R.drawable.ic_baseline_keyboard_24,
                 SwitchOptionEntry.Static.Type.Keyboard,
             ),
+            // 拍台文特化：「…」面板直達說明頁（上游無此項）
+            SwitchOptionEntry.Static(
+                context.getString(R.string.taigi_guide),
+                R.drawable.ic_baseline_book_24,
+                SwitchOptionEntry.Static.Type.TaigiGuide,
+            ),
         )
     }
 
@@ -121,6 +127,7 @@ class SwitchOptionWindow :
                                 r.commitComposition()
                             }
                         }
+                        SwitchOptionEntry.Static.Type.TaigiGuide -> AppUtils.launchMainToTaigiGuide(context)
                     }
                     is SwitchOptionEntry.Custom -> {
                         val options = entry.switch.options

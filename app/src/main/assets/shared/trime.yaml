@@ -897,8 +897,8 @@ preset_keys:
   # ── 拍台文專用鍵 ──
   Taigi_Tab: {label: 選字, send: Tab} #桌面 Tab: 整句連打逐詞選字 (asdf…)
   Taigi_Roman: {label: 羅, send: backslash} #桌面 \: 手動漢羅標記羅馬字
-  Taigi_Poj: {label: TL/POJ, toggle: poj_mode, states: [TL, POJ]}
-  Taigi_Hanlo: {label: 漢/全, toggle: full_romanization, states: [漢羅, 全羅]}
+  Taigi_Poj: {label: TL/POJ, send: SWITCH_CHARSET, toggle: poj_mode, states: [TL, POJ]}
+  Taigi_Hanlo: {label: 漢/全, send: SWITCH_CHARSET, toggle: full_romanization, states: [漢羅, 全羅]}
   select_all: {label: 全選, send: Control+a}
   Clear: {label: 清除, text: "{Control+a}{BackSpace}"} #全選並刪除
   cut: {label: 剪下, send: Control+x}

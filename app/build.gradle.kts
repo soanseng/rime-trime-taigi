@@ -132,6 +132,31 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
+// 拍台文 fork: 上游 patches/lua.patch 不會自動套用, 這裡在 CMake configure 前套用
+// (bionic API21 arm32 的 fseeko/ftello 未宣告, Lua LUA_USE_POSIX 分支編不過).
+val applyUpstreamLuaPatch: TaskProvider<Exec> =
+    tasks.register<Exec>("applyUpstreamLuaPatch") {
+        description = "Apply patches/lua.patch to thirdparty lua5.4 (idempotent)"
+        val target = "app/src/main/jni/librime/plugins/librime-lua/thirdparty"
+        val patchFile = rootProject.file("patches/lua.patch").absolutePath
+        commandLine(
+            "bash",
+            "-c",
+            "patch -N --forward -p1 -d '$target' -i '$patchFile' || true",
+        )
+        workingDir = rootProject.projectDir
+    }
+
+tasks.matching { it.name.startsWith("configureCMake") }.configureEach {
+    dependsOn(applyUpstreamLuaPatch)
+}
+
+// 拍台文 fork: 上游 generateDataChecksums 沒掛進 build, 沒跑會讓 DataManager.sync
+// 在開 App 時炸 (assets.open("checksums.json") 找不到) — 綁進 preBuild 保證產出.
+tasks.named("preBuild") {
+    dependsOn("generateDataChecksums")
+}
+
 dependencies {
     ksp(project(":codegen"))
     implementation(libs.kotlinx.coroutines)

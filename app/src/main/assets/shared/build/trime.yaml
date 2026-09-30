@@ -5,7 +5,7 @@
 # Trime default style settings
 # encoding: utf-8
 
-config_version: "3.3.12-ptaibun1"
+config_version: "3.3.12-ptaibun2"
 name: 預設 #方案名稱
 author: osfans #作者資訊
 
@@ -879,7 +879,7 @@ preset_keys:
   Return1: {label: Enter, send: Return}
   Return2: {label: 回车, send: Return}
   Hide: {label: 隱藏, send: BACK}
-  BackSpace: {label: <-, repeatable: true, send: BackSpace}
+  BackSpace: {label: ←, repeatable: true, send: BackSpace}
   space: {repeatable: false, functional: false, send: space}
   space1: {label: 空格, repeatable: false, functional: false, send: space}
   Escape: {label: Esc, send: Escape}

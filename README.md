@@ -4,7 +4,22 @@ SPDX-FileCopyrightText: 2015 - 2024 Rime community
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# Trime
+# 拍台文 Trime（Phah Tai-bun 特化版）
+
+拍台文（Phah Tai-bun）台語輸入法的**客製 Trime APK**：預裝台語（TL/POJ 模糊輸入＋漢羅/全羅）、注音（bopomofo_tw）、嘸蝦米（liur），介面繁體台灣化，鍵盤內建拍台文功能列（選字／翻頁／羅／TL-POJ／漢全羅切換）。應用 ID `com.soanseng.phahtaibun`，可與官方同文並存。
+
+Fork 自 [osfans/trime](https://github.com/osfans/trime) **v3.3.12**（upstream 保留為 remote，版面與預設方案改動集中在 `assets/shared/trime.yaml`、`DataManager.SCHEMA_LIST_CUSTOM_PATCH`）。輸入方案與詞典來源：[soanseng/rime-phah-taibun](https://github.com/soanseng/rime-phah-taibun)（MIT；嘸蝦米檔案集來源與授權標示見包內 `LIUR-PROVENANCE.txt`、`THIRD-PARTY-NOTICES.txt`）。
+
+## 更新拍台文 assets
+
+```bash
+./script/sync_taigi_assets.sh   # 由 rime-phah-taibun 產生並同步 (不刪上游檔)
+./gradlew assembleDebug
+```
+
+---
+
+# Trime（上游）
 
 Rime IME for Android
 

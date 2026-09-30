@@ -16,13 +16,13 @@ style:
   candidate_spacing: 0.0 #候选分割线
   candidate_text_size: 22 #候選字號
   candidate_text_vertical_bias: 1.0 #候选文本垂直偏移位置（仅 overlay 模式使用，需要间隙空间足够，范围 0.0~1.0，0.0=top，0.5=center，1.0=bottom）
-  candidate_view_height: 28 #候選區高度
+  candidate_view_height: 30 #候選區高度 (拍台文: 容納 22sp 候選+13sp 拼音註解)
   #candidate_corner_radius: 4 #候選項圓角半徑
   comment_font: comment.ttf #編碼提示字型
   comment_height: 12 #编码提示区高度（仅 top 模式约束高度，其余模式与 candidate_view_height 无区别）
   comment_position: right #编码提示布局位置：right / top / overlay
   comment_vertical_bias: 0.0 #编码提示垂直偏移位置（仅 overlay 模式使用，需要间隙空间足够，范围 0.0~1.0，0.0=top，0.5=center，1.0=bottom）
-  comment_text_size: 10 #編碼提示字號
+  comment_text_size: 13 #編碼提示字號 (拍台文: 拼音註解放大到可讀)
   hanb_font: hanb.ttf #擴充字型
   horizontal_gap: 1 #鍵水平間距
   keyboard_padding: 0 #竖屏模式下，屏幕左右两侧与键盘的距离（曲面屏减少误触）
@@ -894,6 +894,11 @@ preset_keys:
   Down: {label: '↓', send: Down}
   Up: {label: '↑', send: Up}
   Right: {label: '→', send: Right}
+  # ── 拍台文專用鍵 ──
+  Taigi_Tab: {label: 選字, send: Tab} #桌面 Tab: 整句連打逐詞選字 (asdf…)
+  Taigi_Roman: {label: 羅, send: backslash} #桌面 \: 手動漢羅標記羅馬字
+  Taigi_Poj: {label: TL/POJ, toggle: poj_mode, states: [TL, POJ]}
+  Taigi_Hanlo: {label: 漢/全, toggle: full_romanization, states: [漢羅, 全羅]}
   select_all: {label: 全選, send: Control+a}
   Clear: {label: 清除, text: "{Control+a}{BackSpace}"} #全選並刪除
   cut: {label: 剪下, send: Control+x}
@@ -1028,6 +1033,13 @@ preset_keyboards:
       - {click: "'", long_click: '"'}
       - {click: BackSpace, width: 15}
       - {click: Return, composing: Return1, long_click: CommitComment, width: 15}
+      # ── 拍台文功能列 (矮列) ──
+      - {click: Taigi_Tab, height: 34, width: 22}
+      - {click: Page_Up, height: 34, width: 13}
+      - {click: Page_Down, height: 34, width: 13}
+      - {click: Taigi_Roman, height: 34, width: 13}
+      - {click: Taigi_Poj, height: 34, width: 19.5}
+      - {click: Taigi_Hanlo, height: 34, width: 19.5}
   mini:
     name: 精简键盘
     author: "tumuyan"
@@ -1118,6 +1130,13 @@ preset_keyboards:
     - {click: '.', long_click: '>'}
     - {click: '/', long_click: '?'}
     - {click: Return, composing: Return1, long_click: CommitComment, width: 15}
+    # ── 拍台文功能列 (矮列) ──
+    - {click: Taigi_Tab, height: 34, width: 22}
+    - {click: Page_Up, height: 34, width: 13}
+    - {click: Page_Down, height: 34, width: 13}
+    - {click: Taigi_Roman, height: 34, width: 13}
+    - {click: Taigi_Poj, height: 34, width: 19.5}
+    - {click: Taigi_Hanlo, height: 34, width: 19.5}
   qwerty_:
     name: 預設30鍵
     author: "osfans <waxaca@163.com>"
@@ -1162,6 +1181,13 @@ preset_keyboards:
     - {click: space, width: 40}
     - {click: BackSpace, width: 15}
     - {click: Return, composing: Return1, long_click: CommitComment, width: 15}
+    # ── 拍台文功能列 (矮列) ──
+    - {click: Taigi_Tab, height: 34, width: 22}
+    - {click: Page_Up, height: 34, width: 13}
+    - {click: Page_Down, height: 34, width: 13}
+    - {click: Taigi_Roman, height: 34, width: 13}
+    - {click: Taigi_Poj, height: 34, width: 19.5}
+    - {click: Taigi_Hanlo, height: 34, width: 19.5}
   qwerty:
     name: 預設26鍵
     author: "osfans <waxaca@163.com>"
@@ -1216,6 +1242,13 @@ preset_keyboards:
     - {click: '.', long_click: '>'}
     - {click: '/', long_click: '?'}
     - {click: Return, composing: Return1, long_click: CommitComment, width: 15}
+    # ── 拍台文功能列 (矮列) ──
+    - {click: Taigi_Tab, height: 34, width: 22}
+    - {click: Page_Up, height: 34, width: 13}
+    - {click: Page_Down, height: 34, width: 13}
+    - {click: Taigi_Roman, height: 34, width: 13}
+    - {click: Taigi_Poj, height: 34, width: 19.5}
+    - {click: Taigi_Hanlo, height: 34, width: 19.5}
   us_intl:
     name: 美式國際
     author: "Terry Tsang <archerindigo@gmail.com>"

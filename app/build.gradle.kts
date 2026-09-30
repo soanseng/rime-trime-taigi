@@ -22,7 +22,7 @@ android {
     buildToolsVersion = "36.0.0"
 
     defaultConfig {
-        applicationId = "com.osfans.trime"
+        applicationId = "com.soanseng.phahtaibun" // 拍台文特化版: 與官方同文可並存
         minSdk = 21
         targetSdk = 36
         versionCode = 20260901

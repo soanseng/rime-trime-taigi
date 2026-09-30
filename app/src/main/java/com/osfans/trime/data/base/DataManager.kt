@@ -28,11 +28,14 @@ object DataManager {
 
     private const val DATA_CHECKSUMS_NAME = "checksums.json"
 
+    // 拍台文特化版: 預設方案 = 拍台文 (TL/POJ 模糊輸入) + Telex 調鍵 + 注音 + 嘸蝦米
     private const val SCHEMA_LIST_CUSTOM_PATCH = """
       patch:
         schema_list:
-          - schema: luna_pinyin
-          - schema: luna_pinyin_simp
+          - schema: phah_taibun
+          - schema: phah_taibun_telex
+          - schema: bopomofo_tw
+          - schema: liur
     """
 
     private val lock = ReentrantLock()

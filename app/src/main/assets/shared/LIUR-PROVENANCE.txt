@@ -1,0 +1,9 @@
+rime-liur-arch provenance / 嘸蝦米檔案集來源標示
+source remote: https://github.com/soanseng/rime-liur-arch
+commit: 0468cf3aeff1f07a7ee7febe39691cb9c44fa58f
+
+upstream: ryanwuson/rime-liur (via soanseng/rime-liur-arch)
+license: 上游未附具名授權檔 (GitHub license API 為 null), README 僅宣告
+         「本專案基於開源授權發佈，歡迎使用和改進」。
+         本專案依該宣告隨包散布並標示來源; 若上游日後補上正式授權條款,
+         以其條款為準。

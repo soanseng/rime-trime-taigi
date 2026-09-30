@@ -1,0 +1,66 @@
+PhahTaiBun-Trime.zip 第三方授權標示 / third-party notices
+============================================================
+
+本包含有下列專案的未修改檔案, 皆為 GNU Lesser General Public License v3.0
+(LGPL-3.0); 授權全文見 licenses/LGPL-3.0.txt 與 licenses/GPL-3.0.txt
+(LGPL-3.0 以引用方式納入 GPL-3.0, 故兩份一併附上).
+
+檔案取自系統 rime 共享資料夾: /usr/share/rime-data
+未做任何修改; 原始碼見下列 repository.
+
+檔案 file      : opencc/emoji.json
+  專案 project : rime-emoji
+  repository   : https://github.com/rime/rime-emoji
+  著作權 owners: 雪齋 <leoyoontsaw@gmail.com>
+  授權 license : LGPL-3.0
+  sha256       : 26fe9074c1596aebe08f19f5f66f47833fa9be940abcaa49d24a790256c09848
+  說明 note    : Emoji 候選資料 (OpenCC 設定) (未修改, 原樣重散布)
+檔案 file      : opencc/emoji_word.txt
+  專案 project : rime-emoji
+  repository   : https://github.com/rime/rime-emoji
+  著作權 owners: 雪齋 <leoyoontsaw@gmail.com>
+  授權 license : LGPL-3.0
+  sha256       : 301d3ea25833186aa89369ecc515f8f43fe6d9db2a9794df083f7316375b18f5
+  說明 note    : Emoji 候選資料 (詞彙映射) (未修改, 原樣重散布)
+檔案 file      : opencc/emoji_category.txt
+  專案 project : rime-emoji
+  repository   : https://github.com/rime/rime-emoji
+  著作權 owners: 雪齋 <leoyoontsaw@gmail.com>
+  授權 license : LGPL-3.0
+  sha256       : 325d5e92977a16fe00ed83cc202899e1ccecfd2912cd5f34eeee28fa76e2e69f
+  說明 note    : Emoji 候選資料 (分類映射) (未修改, 原樣重散布)
+檔案 file      : terra_pinyin.dict.yaml
+  專案 project : rime-terra-pinyin
+  repository   : https://github.com/rime/rime-terra-pinyin
+  著作權 owners: GONG Chen <chen.sst@gmail.com>, Kunki Chiu <cokunhui@gmail.com>
+  授權 license : LGPL-3.0
+  來源 package : rime-data-terra-pinyin 0.0~git20241225.333ec41-1
+  sha256       : 24e2cd3b14d2b4df5349dcc7f3bb3441c816be429d3794c934b102ef3c3d9ff7
+  備註 note    : schema data refined from Chewing (LGPL), OpenCC (Apache-2.0), Android Pinyin IME (Apache-2.0) and moedict.tw (CC0-1.0)
+
+檔案 file      : bopomofo.schema.yaml
+  專案 project : rime-bopomofo
+  repository   : https://github.com/rime/rime-bopomofo
+  著作權 owners: GONG Chen <chen.sst@gmail.com>
+  授權 license : LGPL-3.0
+  來源 package : rime-data-bopomofo 0.0~git20210131.c7618f4-3+b1
+  sha256       : b98e3fbd6f63a3c8a2aeb5a81727a22f7b25c869c0e8b328af2565a8cae7c4f7
+
+檔案 file      : bopomofo_tw.schema.yaml
+  專案 project : rime-bopomofo
+  repository   : https://github.com/rime/rime-bopomofo
+  著作權 owners: GONG Chen <chen.sst@gmail.com>
+  授權 license : LGPL-3.0
+  來源 package : rime-data-bopomofo 0.0~git20210131.c7618f4-3+b1
+  sha256       : ef570ad2ea771b34edebd7cd71f66a460651b858edb9160b4c195d8ef5876fdd
+
+檔案 file      : zhuyin.yaml
+  專案 project : rime-bopomofo
+  repository   : https://github.com/rime/rime-bopomofo
+  著作權 owners: GONG Chen <chen.sst@gmail.com>
+  授權 license : LGPL-3.0
+  來源 package : rime-data-bopomofo 0.0~git20210131.c7618f4-3+b1
+  sha256       : 77931ab77952fdb2535f8addebc0918453e0220a50ca176380971203f14c48be
+
+拍台文自己的檔案 (schema/phah_taibun*, lua/, rime.lua, default.custom.yaml,
+INSTALL-Trime.md) 為 MIT 授權, 見 LICENSE-PhahTaiBun.txt.

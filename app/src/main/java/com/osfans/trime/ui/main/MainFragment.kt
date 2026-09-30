@@ -56,6 +56,11 @@ class MainFragment : PaddingPreferenceFragment() {
                 NavigationRoute.UserDict,
             )
             addDestinationPreference(
+                R.string.taigi_guide,
+                R.drawable.ic_baseline_book_24,
+                NavigationRoute.TaigiGuide,
+            )
+            addDestinationPreference(
                 R.string.profile,
                 R.drawable.ic_baseline_snippet_folder_24,
                 NavigationRoute.Profile,

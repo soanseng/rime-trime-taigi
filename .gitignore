@@ -9,6 +9,10 @@
 # Gradle files
 .gradle/
 build/
+# 拍台文: assets/shared/build/trime.yaml 是烘焙主題 prebuilt fallback
+# (DataManager.resolveDeployedResourcePath), 必須進版控 — 排除通用 build/ 規則
+!app/src/main/assets/shared/build/
+!app/src/main/assets/shared/build/**
 
 # Local configuration file (sdk path, etc)
 local.properties

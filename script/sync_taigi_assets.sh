@@ -17,7 +17,14 @@ fi
 STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 
-(cd "$PHAH_REPO" && uv run python scripts/build_trime_package.py --with-liur --apk-assets "$STAGE/shared")
+# 非 Debian 系（如 Arch）無 /usr/share/common-licenses — 用 PHAH_COMMON_LICENSES
+# 指向含 LGPL-3/GPL-3 的目錄（例：PHAH_COMMON_LICENSES=/tmp/common-licenses）。
+EXTRA_ARGS=()
+if [ -n "${PHAH_COMMON_LICENSES:-}" ]; then
+    EXTRA_ARGS+=(--common-licenses-dir "$PHAH_COMMON_LICENSES")
+fi
+
+(cd "$PHAH_REPO" && uv run python scripts/build_trime_package.py --with-liur --apk-assets "$STAGE/shared" "${EXTRA_ARGS[@]}")
 
 rsync -a "$STAGE/shared/" "$ROOT/app/src/main/assets/shared/"
 echo "synced: $(find "$ROOT/app/src/main/assets/shared" -type f | wc -l) files in assets/shared"

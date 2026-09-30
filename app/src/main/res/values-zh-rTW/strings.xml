@@ -114,6 +114,15 @@
     <string name="developer">開發者</string>
     <string name="exception_logcat_created">Logcat 行程已建立</string>
     <string name="about">關於</string>
+    <string name="taigi_guide">拍台文說明</string>
+    <string name="taigi_guide_url">https://taigi.anatomind.com/guide#/</string>
+    <string name="taigi_guide_online_title">完整使用說明（線上）</string>
+    <string name="taigi_guide_keyboard_title">鍵盤（拍台文方案）</string>
+    <string name="taigi_guide_keyboard_summary">上游 Trime 26 鍵版面：q–p 長按＝符號（!@#$…）、上滑＝數字 1–0；a 長按＝全選、s 上滑／下滑＝上頁／下頁；z x c v 長按＝剪下／複製／貼上。切換其他方案（嘸蝦米／注音）時回到 Trime 原版鍵盤。</string>
+    <string name="taigi_guide_panel_title">拍台文面板（長按「中文」鍵）</string>
+    <string name="taigi_guide_panel_summary">長按「中文(方案)」鍵開啟：選字（連打逐詞選字）、羅（手動漢羅標記羅馬字）、TL/POJ 與 漢羅/全羅（輸出模式切換，鍵面顯示現況、跨作業階段記憶）、方案選單、返回。</string>
+    <string name="taigi_guide_commit_title">選字直接上屏</string>
+    <string name="taigi_guide_commit_summary">輸入羅馬字（聲調可省）後點候選：涵蓋全部輸入的候選會直接上屏（空白鍵亦同）。電腦端的「整句連打」是 phah_taibun_fluency 方案（本手機包未註冊，詳見線上說明）。</string>
     <string name="theme">鍵盤樣式</string>
     <string name="profile">配置</string>
     <string name="virtual_keyboard">虛擬鍵盤</string>

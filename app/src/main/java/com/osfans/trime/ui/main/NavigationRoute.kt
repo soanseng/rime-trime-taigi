@@ -47,6 +47,9 @@ sealed class NavigationRoute : Parcelable {
     data object TaigiGuide : NavigationRoute()
 
     @Serializable
+    data object LanguageSwitch : NavigationRoute()
+
+    @Serializable
     data object CandidatesWindow : NavigationRoute()
 
     @Serializable
@@ -87,6 +90,9 @@ sealed class NavigationRoute : Parcelable {
 
             fragment<GeneralSettingsFragment, General> {
                 label = ctx.getString(R.string.general)
+            }
+            fragment<LanguageSwitchFragment, LanguageSwitch> {
+                label = ctx.getString(R.string.taigi_language_switch)
             }
             fragment<TaigiGuideFragment, TaigiGuide> {
                 label = ctx.getString(R.string.taigi_guide)

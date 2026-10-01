@@ -115,6 +115,8 @@
     <string name="exception_logcat_created">Logcat 行程已建立</string>
     <string name="about">關於</string>
     <string name="taigi_guide">拍台文說明</string>
+    <string name="taigi_language_switch">UI 語言</string>
+    <string name="taigi_language_summary">繁體中文 ↔ 台文（漢羅）</string>
     <string name="taigi_guide_url">https://taigi.anatomind.com/guide#/</string>
     <string name="taigi_guide_online_title">完整使用說明（線上）</string>
     <string name="taigi_guide_keyboard_title">鍵盤（拍台文方案）</string>

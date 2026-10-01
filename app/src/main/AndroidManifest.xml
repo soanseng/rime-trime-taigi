@@ -20,6 +20,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
         android:roundIcon="@mipmap/ic_app_icon_round"
         android:theme="@style/Theme.TrimeAppTheme"
         android:hasFragileUserData="true"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="29">
 
         <service

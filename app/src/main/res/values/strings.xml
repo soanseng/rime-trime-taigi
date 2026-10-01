@@ -115,6 +115,8 @@
     <string name="developer">Developer</string>
     <string name="profile">Profile</string>
     <string name="taigi_guide">Phah Taigi Guide</string>
+    <string name="taigi_language_switch">UI Language</string>
+    <string name="taigi_language_summary">Traditional Chinese ↔ Taigi (Hanlo)</string>
     <string name="taigi_guide_url">https://taigi.anatomind.com/guide#/</string>
     <string name="taigi_guide_online_title">Full guide (online)</string>
     <string name="taigi_guide_keyboard_title">Keyboard (Phah Taigi schemas)</string>

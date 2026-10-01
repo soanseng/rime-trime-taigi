@@ -61,6 +61,11 @@ class MainFragment : PaddingPreferenceFragment() {
                 NavigationRoute.TaigiGuide,
             )
             addDestinationPreference(
+                R.string.taigi_language_switch,
+                R.drawable.ic_baseline_settings_24,
+                NavigationRoute.LanguageSwitch,
+            )
+            addDestinationPreference(
                 R.string.profile,
                 R.drawable.ic_baseline_snippet_folder_24,
                 NavigationRoute.Profile,

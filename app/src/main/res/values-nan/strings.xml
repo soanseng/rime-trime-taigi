@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SPDX-FileCopyrightText: 2026 Phah Tai-bun contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+
+  台文 (Hanlo) UI — 漢羅合用，羅馬字採 Tâi-lô (TL)。
+  引擎詞彙驗證（phah_taibun.dict.yaml 比對）：
+  ✓齒盤 khi2-puann5 ✓使用者 ✓辭典 ✓方案 ✓設定 ✓一般 ✓進階
+  ✓線頂 ✓候選 ✓面頂 ✓返來 ✓這馬 ✓會使 ✓向頂 ✓向落 ✓無 ✓免 ✓鉸刀
+  UI 複合詞（選字/全選/上頁/下頁/開發者）＝介面標籤，非詞庫條目。
+-->
+<resources>
+    <!-- App -->
+    <string name="trime_app_name">拍台文</string>
+    <string name="app_name_release">拍台文</string>
+
+    <!-- 主畫面 -->
+    <string name="schemata">方案</string>
+    <string name="user_dictionary">使用者辭典</string>
+    <string name="profile">設定檔</string>
+    <string name="general">一般</string>
+    <string name="virtual_keyboard">齒盤</string>
+    <string name="candidates_window">候選窗</string>
+    <string name="theme">齒盤樣式</string>
+    <string name="clipboard">剪貼簿</string>
+    <string name="advanced">進階</string>
+    <string name="about">關於</string>
+    <string name="developer">開發者</string>
+
+    <!-- 拍台文說明 -->
+    <string name="taigi_guide">拍台文說明</string>
+    <string name="taigi_guide_url">https://taigi.anatomind.com/guide#/</string>
+    <string name="taigi_guide_online_title">完整說明（線頂）</string>
+    <string name="taigi_guide_keyboard_title">齒盤（拍台文方案）</string>
+    <string name="taigi_guide_keyboard_summary">拍台文方案專用 26 鍵版面（無數字列）：\n• q–p 長按＝符號\n• q–p 向頂＝數字 1–0\n• a 長按＝全選；s 向頂／向落＝上頁／下頁\n• z／x／c／v 長按＝鉸刀／複製／貼上\n• 換做嘸蝦米、注音等其他方案＝原版 Trime 齒盤</string>
+    <string name="taigi_guide_panel_title">拍台文面頂（長按「中文」鍵）</string>
+    <string name="taigi_guide_panel_summary">長按齒盤左下角「中文」鍵：\n• 選字＝連打時逐詞揀字\n• 羅＝手動漢羅標記羅馬字\n• TL/POJ、漢羅/全羅＝輸出模式切換\n• 上頁／下頁＝候選詞翻頁\n• 方案＝方案選單；返來＝轉主齒盤</string>
+    <string name="taigi_guide_commit_title">揀字直接上屏</string>
+    <string name="taigi_guide_commit_summary">• 輸入羅馬字（聲調會使省）→ 點候選：涵蓋全部輸入就直接上屏，免按空白\n• 電腦「整句連打」＝phah_taibun_fluency 方案（這馬手機包無註冊）</string>
+
+    <!-- 語言切換 -->
+    <string name="taigi_language_switch">UI 語言</string>
+    <string name="taigi_language_summary">繁體中文 ↔ 台文（漢羅）</string>
+</resources>

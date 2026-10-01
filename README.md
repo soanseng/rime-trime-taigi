@@ -54,7 +54,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ## 從源碼建置
 
-需求：Android SDK＋NDK、JDK 17、Python 3（OpenCC 詞典產生）。
+需求：Android SDK＋NDK、JDK 17、[uv](https://docs.astral.sh/uv/getting-started/install/)（同步腳本以 `uv run` 執行 Python；OpenCC 詞典產生在 rime-phah-taibun 的環境內，無需自裝 Python）。
 
 ```sh
 git clone --recurse-submodules https://github.com/soanseng/rime-trime-taigi.git

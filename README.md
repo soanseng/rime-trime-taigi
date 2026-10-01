@@ -65,6 +65,18 @@ cd rime-trime-taigi
 
 Release 簽署與建置疑難排除同上游：[上游文件](https://github.com/osfans/trime/wiki)、[CONTRIBUTING.md](CONTRIBUTING.md)。
 
+## 從上游 Trime 更新（維護者）
+
+摘要如下；完整 runbook（lua.patch 重套判讀、assets 再同步、tag 前 commit 紀律）見 [AGENTS.md](AGENTS.md)。
+
+```sh
+git fetch upstream --tags
+git merge v3.3.13                        # 併 release tag；勿併 develop 尖端
+git submodule update --init --recursive  # 會清掉 lua.patch — 重套法見 AGENTS.md
+./script/sync_taigi_assets.sh           # 重產台語 assets（tracked 檔，須 commit）
+./gradlew assembleDebug                  # 實機煙霧 → commit → tag → push
+```
+
 ## 授權與致謝
 
 - [GPL-3.0-or-later](LICENSE)，沿用上游 [osfans/trime](https://github.com/osfans/trime)（Rime community 2015–2024）及其貢獻者

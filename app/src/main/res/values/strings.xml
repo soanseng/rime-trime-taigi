@@ -118,11 +118,11 @@
     <string name="taigi_guide_url">https://taigi.anatomind.com/guide#/</string>
     <string name="taigi_guide_online_title">Full guide (online)</string>
     <string name="taigi_guide_keyboard_title">Keyboard (Phah Taigi schemas)</string>
-    <string name="taigi_guide_keyboard_summary">Upstream Trime 26-key layout: long-press q–p for symbols (!@#$…), swipe up for digits 1–0; long-press a for select-all, swipe up/down on s for page up/down; long-press z/x/c/v for cut/copy/paste. Switching to other schemas (Liur/Bopomofo) restores the stock Trime keyboards.</string>
+    <string name="taigi_guide_keyboard_summary">26-key layout for Phah Taigi schemas (no digit row):\n• Long-press q–p: symbols (! @ # $ …)\n• Swipe up on q–p: digits 1–0\n• Long-press a: select-all; swipe up/down on s: page up/down\n• Long-press z/x/c/v: cut/copy/paste\n• Other schemas (Liur/Bopomofo) use the stock Trime keyboard</string>
     <string name="taigi_guide_panel_title">Phah Taigi panel (long-press the 中文 key)</string>
-    <string name="taigi_guide_panel_summary">Long-press the 中文 (schema) key to open: 選字 (per-word selection in continuous mode), 羅 (mark word as romanization), TL/POJ and 漢羅/全羅 (output-mode toggles; the key face shows the current state and it persists across sessions), 方案選單 (schema menu), 返回 (back).</string>
+    <string name="taigi_guide_panel_summary">Long-press the 中文 key (bottom-left):\n• 選字: per-word selection in continuous mode\n• 羅: mark word as romanization\n• TL/POJ, 漢羅/全羅: output-mode toggles (key face shows state; persists)\n• 上頁/下頁: candidate paging\n• 方案: schema menu; 返回: back to keyboard</string>
     <string name="taigi_guide_commit_title">Candidates commit on tap</string>
-    <string name="taigi_guide_commit_summary">Type romanization (tones optional), then tap a candidate: a candidate covering the whole input commits directly (space works too). The desktop continuous-composition workflow is the phah_taibun_fluency schema (not registered in this mobile build; see the online guide).</string>
+    <string name="taigi_guide_commit_summary">• Type romanization (tones optional) and tap a candidate: covering the whole input commits directly — no space needed\n• Desktop continuous typing = phah_taibun_fluency schema (not registered in this build; see the online guide)</string>
     <string name="virtual_keyboard">Virtual Keyboard</string>
     <string name="theme">Keyboard Style</string>
     <string name="about">About</string>

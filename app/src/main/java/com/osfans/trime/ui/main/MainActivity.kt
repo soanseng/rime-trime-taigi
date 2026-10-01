@@ -232,22 +232,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkNotificationPermission() {
-        if (XXPermissions.isGranted(this, Permission.POST_NOTIFICATIONS)) {
-            return
-        } else {
-            AlertDialog
-                .Builder(this)
-                .setIconAttribute(android.R.attr.alertDialogIcon)
-                .setTitle(R.string.notification_permission_title)
-                .setMessage(R.string.notification_permission_message)
-                .setPositiveButton(R.string.grant_permission) { _, _ ->
-                    XXPermissions
-                        .with(this)
-                        .permission(Permission.POST_NOTIFICATIONS)
-                        .request(null)
-                }.setNegativeButton(android.R.string.cancel, null)
-                .show()
-        }
+        // 拍台文特化: 通知權限僅影響部署完成提示, 不重要 — 不彈窗打擾
+        // (使用者 2026-10-01 回饋: 預設功能關掉)
     }
 
     companion object {

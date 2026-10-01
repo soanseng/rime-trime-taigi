@@ -12,7 +12,7 @@ App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https:/
 
 ## 常態工作樹狀態（判讀，勿誤殺）
 
-`app/src/main/jni/librime-lua-deps` 恆帶髒污：
+`app/src/main/jni/librime-lua-deps` **目前 checkout** 帶有髒污（lua.patch 套用結果 — 這是當前狀態描述，非永久保證）：
 
 - `M lua5.4/liolib.c`（+2 −1）＝ [`patches/lua.patch`](patches/lua.patch) 已套用 — 修 NDK 舊平台（API <24 且 32 位元）的 `fseeko` 連結。**build 不會自動套用此 patch**，它以 submodule 工作樹髒污形式攜帶。
 - `lua5.4/liolib.c.rej`（若有）＝ 重複套用的殘骸。判讀：內容與 lua.patch 同一 hunk、且 `liolib.c` 已含 `ANDROID_PLATFORM` guard（約 118 行）→ 可刪；**內容不同或 guard 不在 → 停下調查，先備份再動**。
@@ -21,12 +21,12 @@ App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https:/
 
 ## 上游更新 runbook
 
-1. `git status` — 除上述已知髒污外必須乾淨；有 `.rej` 先按上文判讀處理
+1. `git status` — 除已知 `liolib.c` 髒污外必須乾淨；`.rej` 先按上文判讀，並備份 submodule 髒污：`git -C app/src/main/jni/librime-lua-deps diff > /tmp/lua-deps.dirty.patch`
 2. `git fetch upstream --tags`
 3. 挑 **release tag**（`v3.3.x`），**勿併 `develop` 尖端**；先 `git log --oneline HEAD..<tag>` 預覽內容
 4. `git merge <tag>` — 用 merge，**禁 rebase**（`main` 已發布、`v0.1.x` tag 存在，改寫歷史會炸 release）
 5. 解衝突（熱點見下表）
-6. `git submodule update --init --recursive` — 這步**會清掉 lua.patch 髒污**
+6. `git submodule update --init --recursive` — checkout 定點時會**嘗試**清掉 lua.patch 髒污（不保證安全清除）；若因髒污擋住而失敗，確認步驟 1 備份存在後才 `git -C app/src/main/jni/librime-lua-deps checkout -- lua5.4/liolib.c` 再重試
 7. 檢查上游是否已自行修掉：
    `grep -n ANDROID_PLATFORM app/src/main/jni/librime-lua-deps/lua5.4/liolib.c`
    沒修就重套：
@@ -38,7 +38,7 @@ App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https:/
 10. **commit 全部**（merge、衝突解法、同步後的 assets）
 11. 同步文檔基準：README「分支自 … v3.3.12」字樣與 repo description 改成新 base：
     `gh api -X PATCH repos/soanseng/rime-trime-taigi -f description='…' -f homepage='https://taigi.anatomind.com'`
-12. `git tag v0.1.<n> && git push origin main --tags` → GitHub 開 Release（notes 註明對應上游 base）
+12. `git tag v0.1.<n> && git push origin main v0.1.<n>` — **禁用 `--tags`**：步驟 2 的 `fetch upstream --tags` 會把上游 `v3.3.x`／`nightly` 帶進本機，`--tags` 會把它們全推上 origin 污染 tag 列表 → GitHub 開 Release（notes 註明對應上游 base）
 
 ## 衝突熱點
 

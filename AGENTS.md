@@ -54,3 +54,4 @@ App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https:/
 - 台語資產全部由 `sync_taigi_assets.sh` 從 rime-phah-taibun 產出 — 上游 merge 後**必重跑**，並 commit 其輸出
 - tag 前置條件：`git status` 乾淨（僅容忍已知 `liolib.c` 髒污）＋ 實機煙霧通過
 - 版本各自獨立：上游 `v3.3.x`、本 repo `v0.1.x`；release notes 記錄對應 base
+- Release CI 前提（2026-10-02 驗證）：repo 需設 4 個 secrets — `SIGNING_KEY`（release keystore 檔案 `base64 -w0`）、`KEY_STORE_PASSWORD`、`ALIAS`、`KEY_PASSWORD`；缺任一則 `packageRelease` 讀不到 store 而失敗。`release-ci.yml` 需 `permissions: contents: write`，否則 `GITHUB_TOKEN` 建 Release 得 `403 Resource not accessible by integration`。Signer 必須與既有 APK 一致（`apksigner verify --print-certs` SHA-256 比對），換 key 會斷升級

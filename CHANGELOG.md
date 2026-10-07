@@ -8,7 +8,8 @@ All notable changes to this project will be documented in this file.
 
 ### v0.1.5
 
-- fix(build): versionCode／versionName 改由 `gradle.properties` 的 `taigiVersion` 推算（0.1.5 → 100001005）；v0.1–v0.1.4 都沿用上游 `20260901`／`3.3.12`，無法正確覆蓋升級
+- feat(brand): App 改名「寫台文」（舊名拍台文；與 PhahTaigi 台語輸入法無關），新「寫」字圖示（自適應圖示改用漸層背景）；applicationId 不變，覆蓋安裝保留設定
+- fix(build): versionCode／versionName 改由 `gradle.properties` 的 `taigiVersion` 推算（0.1.5 → 100001005）；v0.1–v0.1.4 都沿用上游的 `20260901`／`3.3.12`，fork 版號無法反映版本先後
 - feat(sync): `script/sync_taigi_assets.sh` 拒絕拍台文 repo 未 commit 的變更，並寫入 `taigi-assets.lock`；新增 `make check-taigi-sync` 偵測拍台文 repo 尚未同步的 commit
 - fix(assets): 同步拍台文——POJ 模式帶調 ing/ik 正確轉 eng/ek（sīng酒 → sēng酒）與大寫音節；字典修正音節層級斜線變體（梅子雞 不再佔 `kue`）；Telex 方案啟用學習
 - docs(agents): 更正 lua.patch 由 gradle `applyUpstreamLuaPatch` 自動套用

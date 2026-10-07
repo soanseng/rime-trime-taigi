@@ -5,8 +5,8 @@
 # Trime custom style settings
 # encoding: utf-8
 
-config_version: "3.3.12-ptaibun5"
-name: 拍台文·精簡      #方案名称
+config_version: "3.3.12-ptaibun6"
+name: 寫台文·精簡      #方案名称
 author: 风花絮        #作者信息
 
 #键盘高度
@@ -4004,7 +4004,7 @@ preset_keyboards:
 
 
   taigi_panel:
-    name: 拍台文
+    name: 寫台文
     ascii_mode: 0
     width: 10
     height: 44
@@ -4027,7 +4027,7 @@ preset_keyboards:
     - click: Taigi_Back
       width: 10
   phah_taibun:
-    name: 拍台文26鍵
+    name: 寫台文26鍵
     ascii_mode: 0
     columns: 10
     width: 10
@@ -4138,7 +4138,7 @@ preset_keyboards:
       long_click: CommitComment
       width: 15
   phah_taibun_telex:
-    name: 拍台文Telex26鍵
+    name: 寫台文Telex26鍵
     ascii_mode: 0
     columns: 10
     width: 10

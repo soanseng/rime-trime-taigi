@@ -1,6 +1,6 @@
 # AGENTS.md — rime-trime-taigi 維護規則
 
-拍台文 Trime（Phah Tâi-bûn）：[osfans/trime](https://github.com/osfans/trime) 的台語特化分支。
+寫台文 Trime（Siá Tâi-bûn；舊名：拍台文）：[osfans/trime](https://github.com/osfans/trime) 的台語特化分支。
 App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https://taigi.anatomind.com>。
 
 ## Remotes 與版本

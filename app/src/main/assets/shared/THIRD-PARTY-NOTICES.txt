@@ -62,5 +62,5 @@ PhahTaiBun-Trime.zip 第三方授權標示 / third-party notices
   來源 package : rime-data-bopomofo 0.0~git20210131.c7618f4-3+b1
   sha256       : 77931ab77952fdb2535f8addebc0918453e0220a50ca176380971203f14c48be
 
-拍台文自己的檔案 (schema/phah_taibun*, lua/, rime.lua, default.custom.yaml,
+寫台文自己的檔案 (schema/phah_taibun*, lua/, rime.lua, default.custom.yaml,
 INSTALL-Trime.md) 為 MIT 授權, 見 LICENSE-PhahTaiBun.txt.

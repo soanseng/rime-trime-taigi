@@ -7,8 +7,8 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- 輸入法平臺名稱  -->
-    <string name="app_name_release">拍台文 Trime</string>
-    <string name="app_name_debug">拍台文 Trime（除錯模式）</string>
+    <string name="app_name_release">寫台文 Trime</string>
+    <string name="app_name_debug">寫台文 Trime（除錯模式）</string>
     <!-- Preference settings -->
     <string name="qq_group_1">同文 QQ 群 1</string>
     <string name="qq_group_2">同文 QQ 群 2</string>
@@ -69,8 +69,8 @@
     <string name="custom_sound_effect_name">自訂按鍵音效</string>
     <string name="setup__next">下一步</string>
     <string name="done">完成</string>
-    <string name="setup__enable_ime_hint">在語言和輸入設定中啟用<b>拍台文</b></string>
-    <string name="setup__select_ime_hint">選擇<b>拍台文</b>作為預設輸入法</string>
+    <string name="setup__enable_ime_hint">在語言和輸入設定中啟用<b>寫台文</b></string>
+    <string name="setup__select_ime_hint">選擇<b>寫台文</b>作為預設輸入法</string>
     <string name="setup__enable_ime">啟用輸入法</string>
     <string name="setup__select_ime">選擇輸入法</string>
     <string name="setup__prev">上一步</string>
@@ -114,14 +114,14 @@
     <string name="developer">開發者</string>
     <string name="exception_logcat_created">Logcat 行程已建立</string>
     <string name="about">關於</string>
-    <string name="taigi_guide">拍台文說明</string>
+    <string name="taigi_guide">寫台文說明</string>
     <string name="taigi_language_switch">UI 語言</string>
     <string name="taigi_language_summary">繁體中文 ↔ 台文（漢羅）</string>
     <string name="taigi_guide_url">https://taigi.anatomind.com/guide#/</string>
     <string name="taigi_guide_online_title">完整使用說明（線上）</string>
-    <string name="taigi_guide_keyboard_title">鍵盤（拍台文方案）</string>
-    <string name="taigi_guide_keyboard_summary">拍台文方案專用 26 鍵版面（無數字列）：\n• q–p 長按＝符號（! @ # $ …）\n• q–p 上滑＝數字 1–0\n• a 長按＝全選；s 上滑／下滑＝上頁／下頁\n• z／x／c／v 長按＝剪下／複製／貼上\n• 切換嘸蝦米、注音等其他方案時＝Trime 原版鍵盤</string>
-    <string name="taigi_guide_panel_title">拍台文面板（長按「中文」鍵）</string>
+    <string name="taigi_guide_keyboard_title">鍵盤（寫台文方案）</string>
+    <string name="taigi_guide_keyboard_summary">寫台文方案專用 26 鍵版面（無數字列）：\n• q–p 長按＝符號（! @ # $ …）\n• q–p 上滑＝數字 1–0\n• a 長按＝全選；s 上滑／下滑＝上頁／下頁\n• z／x／c／v 長按＝剪下／複製／貼上\n• 切換嘸蝦米、注音等其他方案時＝Trime 原版鍵盤</string>
+    <string name="taigi_guide_panel_title">寫台文面板（長按「中文」鍵）</string>
     <string name="taigi_guide_panel_summary">長按鍵盤左下「中文」鍵開啟：\n• 選字＝連打時逐詞選字\n• 羅＝手動漢羅標記羅馬字\n• TL/POJ、漢羅/全羅＝輸出模式切換（鍵面顯示現況、跨作業階段記憶）\n• 上頁／下頁＝候選詞翻頁\n• 方案＝方案選單；返回＝回主鍵盤</string>
     <string name="taigi_guide_commit_title">選字直接上屏</string>
     <string name="taigi_guide_commit_summary">• 輸入羅馬字（聲調可省）→ 點候選：涵蓋全部輸入即直接上屏，免按空白\n• 電腦端「整句連打」＝phah_taibun_fluency 方案（本手機包未註冊，詳見線上說明）</string>
@@ -160,7 +160,7 @@
     <string name="enable_landscape_mode">啟用橫屏模式</string>
     <string name="split_space_percent">自動分割鍵盤比例</string>
     <string name="setup__step_three">第 3 步</string>
-    <string name="setup__select_data_path_hint">選擇<b>拍台文</b>如何儲存 Rime 資料</string>
+    <string name="setup__select_data_path_hint">選擇<b>寫台文</b>如何儲存 Rime 資料</string>
     <string name="setup__select_data_path">選擇外部資料夾…</string>
     <string name="setup__data_path_imported">資料夾匯入成功</string>
     <string name="setup__data_path_import_failed">資料夾匯入失敗</string>

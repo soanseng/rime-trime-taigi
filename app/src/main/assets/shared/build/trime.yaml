@@ -5,8 +5,8 @@
 # Trime default style settings
 # encoding: utf-8
 
-config_version: "3.3.12-ptaibun5"
-name: 拍台文·數字列 #方案名稱
+config_version: "3.3.12-ptaibun6"
+name: 寫台文·數字列 #方案名稱
 author: osfans #作者資訊
 
 style:
@@ -1761,7 +1761,7 @@ preset_keyboards:
 # 用途: build_apk_assets() 烘焙 fork 的 assets/shared/trime.yaml 的上游基座;
 # 上游升級時換此檔並重跑測試。
   taigi_panel:
-    name: 拍台文
+    name: 寫台文
     ascii_mode: 0
     width: 10
     height: 44
@@ -1784,7 +1784,7 @@ preset_keyboards:
     - click: Taigi_Back
       width: 10
   phah_taibun:
-    name: 拍台文40鍵
+    name: 寫台文40鍵
     author: osfans <waxaca@163.com>
     ascii_mode: 0
     width: 10
@@ -1887,7 +1887,7 @@ preset_keyboards:
       long_click: CommitComment
       width: 15
   phah_taibun_telex:
-    name: 拍台文Telex40鍵
+    name: 寫台文Telex40鍵
     author: osfans <waxaca@163.com>
     ascii_mode: 0
     width: 10

@@ -5,7 +5,7 @@ SPDX-FileCopyrightText: 2026 soanseng
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# 拍台文 Trime（Phah Tâi-bûn）
+# 寫台文 Trime（舊名：拍台文 Trime）
 
 [![Release](https://img.shields.io/github/v/release/soanseng/rime-trime-taigi.svg)](https://github.com/soanseng/rime-trime-taigi/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -17,7 +17,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ## 簡介
 
-拍台文是 Trime 的台語特化版：預裝台語（TL/POJ 模糊輸入＋漢羅／全羅）、注音（bopomofo_tw）、嘸蝦米（liur），介面繁體台灣化，鍵盤內建拍台文功能列（選字、翻頁、全羅切換）。應用 ID `com.soanseng.phahtaibun`，**可與官方同文輸入法並存安裝**。
+寫台文是 Trime 的台語特化版：預裝台語（TL/POJ 模糊輸入＋漢羅／全羅）、注音（bopomofo_tw）、嘸蝦米（liur），介面繁體台灣化，鍵盤內建寫台文功能列（選字、翻頁、全羅切換）。應用 ID `com.soanseng.phahtaibun`，**可與官方同文輸入法並存安裝**。
+
+改名說明：本專案與台文雞絲麵製作的「PhahTaigi 台語輸入法」App 無關；因舊名與其過於相近，為免混淆，更名為「寫台文」。
 
 輸入方案與詞典來源：[soanseng/rime-phah-taibun](https://github.com/soanseng/rime-phah-taibun)（MIT）。嘸蝦米檔案集之來源與授權標示見 APK 內 `LIUR-PROVENANCE.txt`、`THIRD-PARTY-NOTICES.txt`。
 
@@ -26,21 +28,21 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ### 輸入方案與行為
 
 - 預裝三方案：**台語**（TL＋POJ 模糊音，漢羅／全羅輸出）、**注音**（台灣 bopomofo_tw）、**嘸蝦米**（liur）
-- 拍台文方案改用 `express_editor`：點選候選字時，涵蓋全部輸入即直接上屏
+- 寫台文方案改用 `express_editor`：點選候選字時，涵蓋全部輸入即直接上屏
 - 方案清單與預設版面設定集中在 `app/src/main/assets/shared/trime.yaml` 與 `DataManager.SCHEMA_LIST_CUSTOM_PATCH`
 
 ### 鍵盤
 
-- 拍台文方案專用 26 鍵版面（無數字列）：q–p 長按＝符號、上滑＝數字 1–0；a 長按＝全選；s 上滑／下滑＝上頁／下頁；z／x／c／v 長按＝剪下／複製／貼上
-- 內建**拍台文功能列**：選字、翻頁、羅（TL-POJ）、漢全羅切換
-- 切換注音、嘸蝦米等其他方案時＝上游 Trime 原版鍵盤；拍台文鍵盤設定跨主題保留
-- 「…」快速面板內建拍台文說明入口；退格鍵面改倒退箭頭
+- 寫台文方案專用 26 鍵版面（無數字列）：q–p 長按＝符號、上滑＝數字 1–0；a 長按＝全選；s 上滑／下滑＝上頁／下頁；z／x／c／v 長按＝剪下／複製／貼上
+- 內建**寫台文功能列**：選字、翻頁、羅（TL-POJ）、漢全羅切換
+- 切換注音、嘸蝦米等其他方案時＝上游 Trime 原版鍵盤；寫台文鍵盤設定跨主題保留
+- 「…」快速面板內建寫台文說明入口；退格鍵面改倒退箭頭
 
 ### 主題與介面
 
 - 介面全面**繁體台灣化**；主題雙風格好記名稱、標準主題繁體化
 - Settings 語言切換：**繁體中文 ↔ 台文（漢羅）**（`values-nan/`）
-- 移除升級通知彈窗；Setup 精靈與標語改「拍台文／tâi-gí」
+- 移除升級通知彈窗；Setup 精靈與標語改「寫台文／tâi-gí」
 - 主題切換鍵補 `SWITCH_CHARSET`；面板支援翻頁
 
 ### 建置與維護

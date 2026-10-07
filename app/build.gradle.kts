@@ -16,6 +16,15 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+// 拍台文 fork 版號：gradle.properties 的 taigiVersion（x.y.z，與 git tag vX.Y.Z 一致）。
+// versionCode 必須逐版遞增，Android 才能覆蓋升級（Obtainium 亦依此判斷）；
+// 1_00_000_000 起跳，保證大於上游沿用的 20260901。
+val taigiVersion: String = providers.gradleProperty("taigiVersion").get()
+val taigiVersionCode: Int =
+    Regex("""(\d+)\.(\d+)\.(\d+)""").matchEntire(taigiVersion)?.destructured?.let { (major, minor, patch) ->
+        100_000_000 + major.toInt() * 1_000_000 + minor.toInt() * 1_000 + patch.toInt()
+    } ?: error("taigiVersion must be x.y.z, got '$taigiVersion'")
+
 android {
     namespace = "com.osfans.trime"
     compileSdk = 36
@@ -25,8 +34,8 @@ android {
         applicationId = "com.soanseng.phahtaibun" // 拍台文特化版: 與官方同文可並存
         minSdk = 21
         targetSdk = 36
-        versionCode = 20260901
-        versionName = "3.3.12"
+        versionCode = taigiVersionCode
+        versionName = taigiVersion
 
         multiDexEnabled = true
         buildConfigField("String", "BUILDER", "\"${project.builder}\"")

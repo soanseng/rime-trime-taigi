@@ -16,7 +16,7 @@ endif
 
 
 .PHONY: all clean build debug spotlessCheck spotlessApply clang-format-lint clang-format style-lint \
-style-apply patch-apply release install translate ndk android
+style-apply patch-apply release install translate ndk android check-taigi-sync
 
 all: release
 
@@ -49,6 +49,10 @@ style-apply: spotlessApply clang-format
 
 patch-apply:
 	-git apply --directory=$(jniDir)/librime-lua-deps patches/lua.patch
+
+# 拍台文 fork: 拍台文 repo 自上次 sync_taigi_assets.sh 後有無未同步 commit
+check-taigi-sync:
+	bash script/check_taigi_sync.sh
 
 debug: patch-apply
 	$(GRADLEW) :app:assembleDebug

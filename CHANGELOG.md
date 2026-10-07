@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## 拍台文 fork
+
+分支自上游 Trime v3.3.12（merge-base `e09ac711`）。下列為本 fork 自己的版本；上游版本紀錄從 `[3.3.12]` 起。
+
+### v0.1.5
+
+- fix(build): versionCode／versionName 改由 `gradle.properties` 的 `taigiVersion` 推算（0.1.5 → 100001005）；v0.1–v0.1.4 都沿用上游 `20260901`／`3.3.12`，無法正確覆蓋升級
+- feat(sync): `script/sync_taigi_assets.sh` 拒絕拍台文 repo 未 commit 的變更，並寫入 `taigi-assets.lock`；新增 `make check-taigi-sync` 偵測拍台文 repo 尚未同步的 commit
+- fix(assets): 同步拍台文——POJ 模式帶調 ing/ik 正確轉 eng/ek（sīng酒 → sēng酒）與大寫音節；字典修正音節層級斜線變體（梅子雞 不再佔 `kue`）；Telex 方案啟用學習
+- docs(agents): 更正 lua.patch 由 gradle `applyUpstreamLuaPatch` 自動套用
+
+### v0.1.4 (2026-10-02)
+
+- fix(assets): 同步拍台文 telex ff = -- 手動輕聲連字修復（rime-phah-taibun 91a1aba）
+- docs: 上游更新 runbook（README 摘要＋AGENTS.md 完整流程）；禁用 `--tags`
+- docs(readme): 全面改用拍台文說明；建置需求補 uv
+
+### v0.1.3 (2026-10-01)
+
+- feat(taigi): Settings UI 語言切換（繁中↔台文漢羅）；標語改 tâi-gí；Setup 精靈「同文輸入法」→「拍台文」
+- fix(i18n): 移除未驗證的「這馬」宣稱；slogan 三語言統一
+
+### v0.1.2 (2026-10-01)
+
+- feat(taigi): 主題雙風格好記名稱＋全面繁體化＋通知彈窗移除＋面板翻頁；拍台文鍵盤跨主題保留
+
+### v0.1.1 (2026-10-01)
+
+- feat(taigi): 「…」快速面板加拍台文說明入口；退格鍵面倒退箭頭
+
+### v0.1 (2026-10-01)
+
+- feat(taigi): 拍台文特化——預裝台語＋注音＋嘸蝦米、繁體台灣化、26 鍵＋拍台文功能面板、新 icon＋說明頁
+- fix(build): 套用上游 lua.patch、preBuild 產 checksums.json
+- fix(schema): 換 express_editor；切換鍵補 `send: SWITCH_CHARSET`
+
 ## [3.3.12] - 2026-09-01
 
 ### 🚀 Features

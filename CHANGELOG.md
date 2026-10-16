@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 分支自上游 Trime v3.3.12（merge-base `e09ac711`）。下列為本 fork 自己的版本；上游版本紀錄從 `[3.3.12]` 起。
 
+### v0.1.6
+
+- fix(assets): 同步寫台文 v0.11.0（32219c4）——LKK 羅馬字讀音的同音漢字袂閣予候選合併食去（`in1` 揀會著 𪜶、`nih4` 揀會著 𥍉、`kah4` 揀會著 佮）
+- fix(assets): 字典語料加權修正——1／4 聲免標、白話字、調符寫法攏對會著字典（這 `tsit4`、佮 `kah4` 排第一；免調 `long`／`loo` 先出 攏／路）；字典提掉私用區字元；詞組挖掘保留聲調
+- chore: 上游 Trime 最新 release 猶是 v3.3.12（本 fork base），本版無上游合併
+
 ### v0.1.5
 
 - feat(brand): App 改名「寫台文」（舊名拍台文；與 PhahTaigi 台語輸入法無關），新「寫」字圖示（自適應圖示改用漸層背景）；applicationId 不變，覆蓋安裝保留設定

@@ -45,9 +45,11 @@ App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https:/
 | 檔案 | 原因 |
 |---|---|
 | `app/src/main/assets/shared/trime.yaml` | 我們的鍵盤版面 vs 上游主題改動 |
-| `app/src/main/res/values*/strings.xml` | `taigi_*` 字串 vs 上游新字串（`values`／`values-zh-rTW`／`values-nan`） |
+| `app/src/main/res/values*/strings.xml` | `taigi_*` 字串 vs 上游新字串（`values`／`values-zh`／`values-nan`）。本 fork 刪掉 `values-zh-rCN`、`values-zh-rTW` 改名 `values-zh`（任何中文手機攏顯示繁體）：上游改 `values-zh-rTW` → 手動搬去 `values-zh`；上游改 `values-zh-rCN` → 刪除衝突照接受刪除；上游新字串愛補 `values-nan` 台文 |
 | `DataManager` | `SCHEMA_LIST_CUSTOM_PATCH`（預裝方案清單） |
-| 主題 yaml | 繁體化 diff 遇上游主題更新 |
+| 主題 yaml | 主題由 rime-phah-taibun 烘焙，顯示文字自動轉台灣繁體；上游新主題文字毋免手改，重跑同步 |
+| `FontManager` | 字型揣 `rime/fonts/` 揣無才揣 `shared/fonts/`（APK 內附原版芫荽，`script/fetch_iansui.sh` 釘版本＋sha256） |
+| `luna_pinyin{,_simp,_tw}`／`stroke.schema.yaml` | 原本 symlink 去 `app/data/rime/*` submodule；本 fork 改做實體檔，開關狀態改繁體（半形/全形、漢字/簡化字）。submodule 更新時愛手動對照這 4 檔 |
 
 ## 紀律
 

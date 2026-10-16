@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 分支自上游 Trime v3.3.12（merge-base `e09ac711`）。下列為本 fork 自己的版本；上游版本紀錄從 `[3.3.12]` 起。
 
+### v0.1.7
+
+- feat(font): App 內附原版芫荽 v1.020（SIL OFL 1.1，附 `fonts/OFL.txt`），候選佮註解改用芫荽 —— 系統字型無的台文用字（𪜶、𥍉…）免閣顯示 X；芫荽無的字由系統字型補。`FontManager` 先揣 `rime/fonts/`，揣無才用 APK 內附的 `shared/fonts/`（使用者家己放的字型優先）
+- feat(i18n): 台文（漢羅）介面補齊 254 條（原本 24 條、其他攏英文）
+- fix(i18n): 全 App 台灣繁體 —— 刪 `values-zh-rCN`，`values-zh-rTW` 改 `values-zh`（任何中文手機攏繁體）；修中國用語（設置→設定、字符→字元、高級→進階…）；鍵盤、符號面板、Enter 鍵、配色名轉繁體（同步寫台文 6ee01b7 烘焙）；方案開關狀態 半角/全角→半形/全形、汉字→簡化字
+- chore(assets): 同步寫台文 6ee01b7（主題 config_version ptaibun7，升級會重新部署主題）
+
 ### v0.1.6
 
 - fix(assets): 同步寫台文 v0.11.0（32219c4）——LKK 羅馬字讀音的同音漢字袂閣予候選合併食去（`in1` 揀會著 𪜶、`nih4` 揀會著 𥍉、`kah4` 揀會著 佮）

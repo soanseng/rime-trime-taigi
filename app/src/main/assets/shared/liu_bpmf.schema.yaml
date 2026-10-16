@@ -26,7 +26,7 @@ switches:
     states: [ 半形, 全形 ]
   - name: simplification
     # 不設 reset：與 liur 一致，跨方案切換保留簡繁（避免工具列「繁」與實際繁體不同步）
-    states: [ 繁體, 简体 ]
+    states: [ 繁體, 簡體 ]
   - name: liu_w2c
     reset: 0
     states: [ 正常, 查碼 ]

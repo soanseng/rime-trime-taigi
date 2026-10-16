@@ -64,3 +64,13 @@ PhahTaiBun-Trime.zip 第三方授權標示 / third-party notices
 
 寫台文自己的檔案 (schema/phah_taibun*, lua/, rime.lua, default.custom.yaml,
 INSTALL-Trime.md) 為 MIT 授權, 見 LICENSE-PhahTaiBun.txt.
+
+APK 版修改 / modified in the app build
+------------------------------------------------------------
+下列方案檔干焦共方案名佮開關狀態 (name:/states:) 轉做台灣繁體 (OpenCC s2twp),
+其他內容無改; 上頁的 sha256 是原檔. 原始碼見上頁 repository.
+  Mount_bopomo.schema.yaml  sha256 e372226eb8615d43330e008f12e6936165552684be5e0fb494fb13cf302873ec
+  bopomofo.schema.yaml  sha256 2040d812a039d38592693977f13cd291d99be07990b5f33b38d3dab19a7b5814
+  liu_bpmf.schema.yaml  sha256 e579884a08a8b3ac791c320cf32336c917248ccda9d473b85402d24a81f9da43
+  liu_pinyin.schema.yaml  sha256 73141cefdd731d28ca1160539edbea0faefdeecd0cd5bf07b471aa7e6ccf7b53
+  liur.schema.yaml  sha256 f142dd0509e60b989910d7f9e130e0dabb6effe6a2e20158e95e0d28dfd37061

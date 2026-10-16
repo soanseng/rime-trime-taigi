@@ -23,7 +23,7 @@ switches:
   - name: full_shape
     states: [ 半形, 全形 ]
   - name: simplification
-    states: [ 繁體, 简体 ]
+    states: [ 繁體, 簡體 ]
   - name: liu_w2c
     reset: 0
     states: [ 正常, 查碼 ]

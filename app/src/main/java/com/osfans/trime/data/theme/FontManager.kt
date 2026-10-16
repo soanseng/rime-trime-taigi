@@ -31,6 +31,11 @@ object FontManager {
     }
 
     private val fontDir get() = File(DataManager.userDataDir, "fonts")
+
+    // 寫台文 fork：使用者 rime/fonts/ 優先，揣無才用 APK 內附的 shared/fonts/（原版芫荽）。
+    private fun fontFile(fontName: String): File? = listOf(fontDir, File(DataManager.sharedDataDir, "fonts"))
+        .map { File(it, fontName) }
+        .firstOrNull { it.exists() }
     lateinit var hanBFont: Typeface
         private set
     lateinit var latinFont: Typeface
@@ -88,11 +93,11 @@ object FontManager {
         val fonts = getFontFromStyle(key)
 
         fun handler(fontName: String): Typeface? {
-            val fontFile = File(fontDir, fontName)
-            if (fontFile.exists()) {
+            val fontFile = fontFile(fontName)
+            if (fontFile != null) {
                 return Typeface.createFromFile(fontFile)
             }
-            Timber.w("font %s not found", fontFile)
+            Timber.w("font %s not found", fontName)
             return null
         }
 
@@ -118,14 +123,14 @@ object FontManager {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getFontFamily(fontName: String): FontFamily? {
-        if (fontFamilyCache.containsKey(fontName)) {
-            return fontFamilyCache[fontName]!!
-        }
-        val fontFile = File(fontDir, fontName)
-        if (fontFile.exists()) {
+        fontFamilyCache[fontName]?.let { return it }
+        val fontFile = fontFile(fontName)
+        if (fontFile != null) {
+            // 快取：芫荽 9 MB，候選佮註解共用仝一个 FontFamily
             return FontFamily.Builder(Font.Builder(fontFile).build()).build()
+                .also { fontFamilyCache[fontName] = it }
         }
-        Timber.w("font %s not found", fontFile)
+        Timber.w("font %s not found", fontName)
         return null
     }
 

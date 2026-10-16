@@ -23,14 +23,14 @@ switches:
     reset: 0
     states: [ 中文, 西文 ]
   - name: full_shape
-    states: [ 半角, 全角 ]
+    states: [ 半形, 全形 ]
   - options:
       - zh_hant
       - zh_hans
       - zh_hant_tw
     states:
       - 傳統漢字
-      - 简化字
+      - 簡化字
       - 臺灣字形
 
 engine:

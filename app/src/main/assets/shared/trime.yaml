@@ -5,7 +5,7 @@
 # Trime default style settings
 # encoding: utf-8
 
-config_version: "3.3.13-ptaibun8"
+config_version: "3.0-ptaibun8"
 name: 寫台文·數字列 #方案名稱
 author: osfans #作者資訊
 

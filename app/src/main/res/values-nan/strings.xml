@@ -17,7 +17,6 @@
 <resources>
     <!-- Input Method Platform Tittle  -->
     <string name="app_name_release">寫台文</string>
-    <string name="trime_app_name">寫台文</string>
     <string name="app_name_debug">寫台文（Trime Debug）</string>
     <!-- Preference settings -->
     <string name="qq_group_1">Trime QQ 群 1</string>

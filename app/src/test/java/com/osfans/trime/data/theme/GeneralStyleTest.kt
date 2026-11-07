@@ -36,10 +36,10 @@ class GeneralStyleTest :
                     style.candidateSpacing shouldBe 0f
                     style.candidateTextSize shouldBe 22f
                     style.candidateTextVerticalBias shouldBe 1f
-                    style.candidateViewHeight shouldBe 28
+                    style.candidateViewHeight shouldBe 30
                     style.commentHeight shouldBe 12
                     style.commentPosition shouldBe GeneralStyle.CommentPosition.RIGHT
-                    style.commentTextSize shouldBe 10f
+                    style.commentTextSize shouldBe 13f
                     style.horizontalGap shouldBe 1
                     style.keyHeight shouldBe 44
                     style.keyLongTextSize shouldBe 14f
@@ -52,13 +52,14 @@ class GeneralStyleTest :
                     style.keyboardPaddingLand shouldBe 40
                 }
 
-                Then("fonts declared as a single scalar decode to a single element") {
-                    style.candidateFont shouldBe MaybeStringList.Scalar("han.ttf")
+                Then("fonts declared as a list or a single scalar decode accordingly") {
+                    // 寫台文 fork: candidate font is the bundled 芫荽, declared as a list.
+                    style.candidateFont shouldBe MaybeStringList.Sequence(listOf("Iansui-Regular.ttf"))
                     style.keyFont shouldBe MaybeStringList.Scalar("symbol.ttf")
                 }
 
                 Then("theme header is decoded") {
-                    theme.name shouldBe "預設"
+                    theme.name shouldBe "寫台文·數字列"
                 }
             }
         }

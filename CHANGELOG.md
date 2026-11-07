@@ -6,10 +6,16 @@ All notable changes to this project will be documented in this file.
 
 分支自上游 Trime v3.3.12（merge-base `e09ac711`），v0.1.8 起合併上游 v3.3.13。下列為本 fork 自己的版本；上游版本紀錄從 `[3.3.13]` 起。
 
+### v0.1.9
+
+- v0.1.8 tag 的 release CI 擋佇 code style（merge 後 ktlint 格式）佮上游新的主題 golden／診斷測試，無產出 APK，改發 v0.1.9
+- fix(theme): 同步寫台文 8da8dcc——主題 config_version 改 `3.0-ptaibun8`（v3.3.13 主題診斷比較主題格式 major.minor，`3.3.13-…` 會予判做較新的格式）
+- test: 上游主題 golden 測試改對 fork 烘焙的主題（台灣繁體名、寫台文鍵盤、芫荽字型）
+
 ### v0.1.8
 
 - chore(upstream): 合併上游 Trime v3.3.13（librime／librime-lua 升級、主題診斷、外部同步改寫）；預裝方案清單搬去 `UserDataManager`，`FontManager` 的 `shared/fonts/` 退路搬去新的 `ThemeFonts`
-- feat(assets): 同步寫台文 v0.12.0（36dc083）——無調連打照完整音節切（`siataibun` → 寫台文）、Telex `sia`／`siav` 第一个是 寫、簡拼取消、教育部辭典優先佮「又唸作」讀音、iTaigi／植物名彙／白話字文獻館無閣收；主題基座 v3.3.13（config_version ptaibun8）
+- feat(assets): 同步寫台文 v0.12.0——無調連打照完整音節切（`siataibun` → 寫台文）、Telex `sia`／`siav` 第一个是 寫、簡拼取消、教育部辭典優先佮「又唸作」讀音、iTaigi／植物名彙／白話字文獻館無閣收；主題基座 v3.3.13（config_version ptaibun8）
 - feat(i18n): 上游新字串（主題診斷、主題無法使用）補台文佮台灣繁體
 
 ### v0.1.7

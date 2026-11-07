@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import com.osfans.trime.data.prefs.AppPrefs
 import com.osfans.trime.data.theme.Theme
 import com.osfans.trime.data.theme.model.TextKeyboard
+import com.osfans.trime.data.theme.model.orAbsent
 import com.osfans.trime.ime.keyboard.KeyboardPrefs.isLandscapeMode
 import splitties.bitflags.hasFlag
 import splitties.dimensions.dp
@@ -27,35 +28,26 @@ class Keyboard(
 
     /** 按鍵默認水平間距  */
     internal val horizontalGap: Int =
-        intArrayOf(
-            selfConfig?.horizontalGap ?: 0,
-            theme.generalStyle.horizontalGap,
-        ).firstOrNull { it > 0 }?.let { context.dp(it) } ?: 0
+        resolvePositive(selfConfig?.horizontalGap, theme.style.horizontalGap) { context.dp(it) }
 
     /** 默認鍵寬  */
-    private val keyWidth: Int = (allowedWidth * theme.generalStyle.keyWidth / 100).toInt()
+    private val keyWidth: Int = (allowedWidth * theme.style.keyWidth / 100).toInt()
 
     /** 默認鍵高 (NOTE: 无需 dp 转换，会被 keyboardHeight 等比例缩放) */
     private val keyHeight: Int =
-        intArrayOf(
-            selfConfig?.height?.toInt() ?: 0,
-            theme.generalStyle.keyHeight,
-        ).firstOrNull { it > 0 } ?: 0
+        resolvePositive(selfConfig?.height?.toInt(), theme.style.keyHeight)
 
     /** 默認行距  */
     internal val verticalGap: Int =
-        intArrayOf(
-            selfConfig?.verticalGap ?: 0,
-            theme.generalStyle.verticalGap,
-        ).firstOrNull { it > 0 }?.let { context.dp(it) } ?: 0
+        resolvePositive(selfConfig?.verticalGap, theme.style.verticalGap) { context.dp(it) }
 
     /** 默認按鍵圓角半徑  */
     val roundCorner: Float =
-        selfConfig?.roundCorner?.takeIf { it >= 0f } ?: theme.generalStyle.roundCorner
+        resolveNonNegative(selfConfig?.roundCorner, theme.style.roundCorner)
 
     /** 默認按鍵邊框寬度  */
     val keyBorder: Int =
-        selfConfig?.keyBorder?.takeIf { it >= 0 } ?: theme.generalStyle.keyBorder
+        resolveNonNegative(selfConfig?.keyBorder, theme.style.keyBorder)
 
     /** 鍵盤的Shift鍵  */
     var mShiftKey: Key? = null
@@ -88,17 +80,14 @@ class Keyboard(
     var firstPressedKeyIndex: Int = -1
 
     /** Keyboard default ascii mode  */
-    val asciiMode = selfConfig?.asciiMode ?: false
+    val asciiMode = selfConfig?.asciiMode == 1
     val resetAsciiMode = selfConfig?.resetAsciiMode ?: true
     var lastAsciiMode: Boolean = asciiMode
 
     val landscapeKeyboard: String? = selfConfig?.landscapeKeyboard
     private val preferredSplitPercent by AppPrefs.defaultInstance().keyboard.splitSpacePercent
     private val landscapePercent =
-        intArrayOf(
-            selfConfig?.landscapeSplitPercent ?: 0,
-            preferredSplitPercent,
-        ).firstOrNull { it > 0 } ?: 0
+        resolvePositive(selfConfig?.landscapeSplitPercent, preferredSplitPercent)
 
     // Variables for pre-computing nearest keys.
     private val labelTransform = selfConfig?.labelTransform ?: TextKeyboard.LabelTransform.NONE
@@ -112,24 +101,22 @@ class Keyboard(
     val asciiKeyboard: String? = selfConfig?.asciiKeyboard // 英文鍵盤
 
     val keyboardHeight: Int =
-        intArrayOf(
-            selfConfig?.let { getKeyboardHeightFromKeyboardConfig(it) } ?: 0,
-            getKeyboardHeightFromTheme(theme),
-        ).firstOrNull { it > 0 } ?: 0
+        resolvePositive(
+            selfConfig?.let {
+                pickLandscape(it.keyboardHeight, it.keyboardHeightLand, context.isLandscapeMode())
+            },
+            pickLandscape(
+                theme.style.keyboardHeight,
+                theme.style.keyboardHeightLand,
+                context.isLandscapeMode(),
+            ),
+        ) { context.dp(it) }
 
     private val expandKeypressArea: Boolean by AppPrefs.defaultInstance().keyboard.expandKeypressArea
 
     init {
 
         if (selfConfig != null) {
-
-            fun firstNonZero(a: Float, b: Float, c: Float): Float = if (a != 0f) {
-                a
-            } else if (b != 0f) {
-                b
-            } else {
-                c
-            }
 
             val keys = selfConfig.keys
             val keyboardKeyWidth = selfConfig.width
@@ -158,7 +145,7 @@ class Keyboard(
 
                 // determine the width weight of this key
                 val keyWidthWeight =
-                    if (key.width == 0f && key.hasClickAction) keyboardKeyWidth else key.width
+                    if (key.width == 0f && key.click.orAbsent != null) keyboardKeyWidth else key.width
 
                 val widthPx = (keyWidthWeight * allowedWidth / MAX_TOTAL_WEIGHT).toInt()
 
@@ -179,7 +166,7 @@ class Keyboard(
                 totalKeyWidth += keyWidthWeight
 
                 // only clickable keys count toward column count
-                if (key.hasClickAction) {
+                if (key.click.orAbsent != null) {
                     column++
                 }
 
@@ -227,7 +214,7 @@ class Keyboard(
             for (textKey in keys) {
 
                 val keyWidthWeight =
-                    if (textKey.width == 0f && textKey.hasClickAction) keyboardKeyWidth else textKey.width
+                    if (textKey.width == 0f && textKey.click.orAbsent != null) keyboardKeyWidth else textKey.width
 
                 var widthPx = (keyWidthWeight * oneWeightWidthPx).toInt()
 
@@ -260,22 +247,22 @@ class Keyboard(
                     }
                 }
 
-                if (!textKey.hasClickAction) {
+                if (textKey.click.orAbsent == null) {
                     if (expandKeypressArea) spacers.add(Triple(xPos, widthPx, row))
                     xPos += widthPx
                     continue
                 }
 
-                val key = Key(this, textKey)
+                val key = Key(this, theme, textKey)
 
-                key.keyTextOffsetX = firstNonZero(textKey.keyTextOffsetX, selfConfig.keyTextOffsetX, theme.generalStyle.keyTextOffsetX)
-                key.keyTextOffsetY = firstNonZero(textKey.keyTextOffsetY, selfConfig.keyTextOffsetY, theme.generalStyle.keyTextOffsetY)
-                key.keySymbolOffsetX = firstNonZero(textKey.keySymbolOffsetX, selfConfig.keySymbolOffsetX, theme.generalStyle.keySymbolOffsetX)
-                key.keySymbolOffsetY = firstNonZero(textKey.keySymbolOffsetY, selfConfig.keySymbolOffsetY, theme.generalStyle.keySymbolOffsetY)
-                key.keyHintOffsetX = firstNonZero(textKey.keyHintOffsetX, selfConfig.keyHintOffsetX, theme.generalStyle.keyHintOffsetX)
-                key.keyHintOffsetY = firstNonZero(textKey.keyHintOffsetY, selfConfig.keyHintOffsetY, theme.generalStyle.keyHintOffsetY)
-                key.keyPressOffsetX = firstNonZero(textKey.keyPressOffsetX, selfConfig.keyPressOffsetX, theme.generalStyle.keyPressOffsetX)
-                key.keyPressOffsetY = firstNonZero(textKey.keyPressOffsetY, selfConfig.keyPressOffsetY, theme.generalStyle.keyPressOffsetY)
+                key.keyTextOffsetX = resolveOffset(textKey.keyTextOffsetX, selfConfig.keyTextOffsetX, theme.style.keyTextOffsetX)
+                key.keyTextOffsetY = resolveOffset(textKey.keyTextOffsetY, selfConfig.keyTextOffsetY, theme.style.keyTextOffsetY)
+                key.keySymbolOffsetX = resolveOffset(textKey.keySymbolOffsetX, selfConfig.keySymbolOffsetX, theme.style.keySymbolOffsetX)
+                key.keySymbolOffsetY = resolveOffset(textKey.keySymbolOffsetY, selfConfig.keySymbolOffsetY, theme.style.keySymbolOffsetY)
+                key.keyHintOffsetX = resolveOffset(textKey.keyHintOffsetX, selfConfig.keyHintOffsetX, theme.style.keyHintOffsetX)
+                key.keyHintOffsetY = resolveOffset(textKey.keyHintOffsetY, selfConfig.keyHintOffsetY, theme.style.keyHintOffsetY)
+                key.keyPressOffsetX = resolveOffset(textKey.keyPressOffsetX, selfConfig.keyPressOffsetX, theme.style.keyPressOffsetX)
+                key.keyPressOffsetY = resolveOffset(textKey.keyPressOffsetY, selfConfig.keyPressOffsetY, theme.style.keyPressOffsetY)
 
                 key.x = xPos
                 key.y = yPos
@@ -309,7 +296,9 @@ class Keyboard(
                             leftKey.extraWidthRight += spacerWidth / 2
                             rightKey.extraWidthLeft += spacerWidth - spacerWidth / 2
                         }
+
                         leftKey != null -> leftKey.extraWidthRight += spacerWidth
+
                         rightKey != null -> rightKey.extraWidthLeft += spacerWidth
                     }
                 }
@@ -328,24 +317,6 @@ class Keyboard(
         }
     }
 
-    private fun getKeyboardHeightFromTheme(theme: Theme): Int {
-        var keyboardHeight = theme.generalStyle.keyboardHeight
-        if (context.isLandscapeMode()) {
-            val keyboardHeightLand = theme.generalStyle.keyboardHeightLand
-            if (keyboardHeightLand > 0) keyboardHeight = keyboardHeightLand
-        }
-        return context.dp(keyboardHeight)
-    }
-
-    private fun getKeyboardHeightFromKeyboardConfig(textKeyboard: TextKeyboard): Int {
-        var keyboardHeight = textKeyboard.keyboardHeight
-        if (context.isLandscapeMode()) {
-            val keyboardHeightLand = textKeyboard.keyboardHeightLand
-            if (keyboardHeightLand > 0) keyboardHeight = keyboardHeightLand
-        }
-        return context.dp(keyboardHeight)
-    }
-
     fun setModifierKey(
         c: Int,
         key: Key?,
@@ -354,15 +325,19 @@ class Keyboard(
             KeyEvent.KEYCODE_SHIFT_LEFT, KeyEvent.KEYCODE_SHIFT_RIGHT -> {
                 mShiftKey = key
             }
+
             KeyEvent.KEYCODE_CTRL_LEFT, KeyEvent.KEYCODE_CTRL_RIGHT -> {
                 mCtrlKey = key
             }
+
             KeyEvent.KEYCODE_META_LEFT, KeyEvent.KEYCODE_META_RIGHT -> {
                 mMetaKey = key
             }
+
             KeyEvent.KEYCODE_ALT_LEFT, KeyEvent.KEYCODE_ALT_RIGHT -> {
                 mAltKey = key
             }
+
             KeyEvent.KEYCODE_SYM -> {
                 mSymKey = key
             }
@@ -427,6 +402,11 @@ class Keyboard(
             }
         val keepOn = modifierKey?.setOn(on) ?: on
         return if (on) setModifier(keycode, keepOn) else setModifier(keycode, keyDown)
+    }
+
+    fun resetShift() {
+        mShiftKey?.setOn(false)
+        setModifier(KeyEvent.META_SHIFT_ON, false)
     }
 
     fun refreshModifier(): Boolean {

@@ -7,7 +7,7 @@ App ID `com.soanseng.phahtaibun`（可與官方同文並存）。網站 <https:/
 
 - `origin` = `soanseng/rime-trime-taigi`（發布用）
 - `upstream` = `osfans/trime`（default branch `develop`）
-- 我們的版號 `v0.1.x`；上游 base 目前 `v3.3.12`（merge-base `e09ac711`）
+- 我們的版號 `v0.1.x`；上游 base 目前 `v3.3.13`（2026-11 merge `v3.3.13`；舊 merge-base `e09ac711`）
 - 本 repo 在 GitHub 是 `fork:false`：**沒有**原生「forked from」橫幅，跨 repo compare/PR 已實測 404 — 血緣證明靠 README 聲明＋完整 git 歷史，**勿依賴 GitHub fork network 功能**（compare、跨 repo PR、fork 同步皆不可用）
 
 ## 常態工作樹狀態（判讀，勿誤殺）

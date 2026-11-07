@@ -31,12 +31,12 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.osfans.trime.BuildConfig
 import com.osfans.trime.R
+import com.osfans.trime.core.data.UserDataManager
 import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.data.prefs.AppPrefs
 import com.osfans.trime.data.soundeffect.SoundEffectManager
 import com.osfans.trime.databinding.ActivityMainBinding
 import com.osfans.trime.ui.setup.SetupActivity
-import com.osfans.trime.util.isStorageAvailable
 import com.osfans.trime.util.item
 import com.osfans.trime.util.parcelable
 import com.osfans.trime.util.startActivity
@@ -158,6 +158,7 @@ class MainActivity : AppCompatActivity() {
             Intent.ACTION_MAIN -> if (SetupActivity.shouldShowUp()) {
                 startActivity<SetupActivity>()
             }
+
             Intent.ACTION_RUN -> {
                 val route = intent.parcelable<NavigationRoute>(EXTRA_SETTINGS_ROUTE) ?: return
                 navController.popBackStack(NavigationRoute.Main, false)
@@ -216,7 +217,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (isStorageAvailable()) {
+        if (UserDataManager.isStorageAvailable()) {
             SoundEffectManager.init()
         }
     }

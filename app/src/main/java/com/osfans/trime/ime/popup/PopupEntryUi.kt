@@ -13,9 +13,8 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.utils.sizeDp
-import com.osfans.trime.data.theme.ColorManager
-import com.osfans.trime.data.theme.FontManager
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.ime.core.AutoScaleTextView
 import com.osfans.trime.ime.keyboard.isIconFont
 import com.osfans.trime.ime.keyboard.toIconName
@@ -30,27 +29,35 @@ import splitties.views.dsl.core.view
 import splitties.views.dsl.core.wrapContent
 import splitties.views.gravityCenter
 
-class PopupEntryUi(override val ctx: Context, private val theme: Theme, keyHeight: Int, radius: Float) : Ui {
+class PopupEntryUi(
+    override val ctx: Context,
+    private val scope: ThemeScope,
+    keyHeight: Int,
+    radius: Float,
+) : Ui {
+    private val theme: Theme get() = scope.theme
 
     var lastShowTime = -1L
 
     val textView = view(::AutoScaleTextView) {
         scaleMode = AutoScaleTextView.Mode.Proportional
-        textSize = theme.generalStyle.popupTextSize
+        textSize = theme.style.popupTextSize
         gravity = gravityCenter
-        setTextColor(ColorManager.getColor("popup_text_color"))
-        typeface = FontManager.getTypeface("POPUP_FONT")
+        setTextColor(scope.colors.popupTextColor)
+        typeface = theme.fonts.popup
     }
 
     val imageView = view(::AppCompatImageView) {
         visibility = android.view.View.GONE
     }
 
+    private val popupBackground = GradientDrawable().apply {
+        cornerRadius = radius
+        setColor(scope.colors.popupBackColor)
+    }
+
     override val root = constraintLayout {
-        background = GradientDrawable().apply {
-            cornerRadius = radius
-            setColor(ColorManager.getColor("popup_back_color"))
-        }
+        background = popupBackground
         outlineProvider = ViewOutlineProvider.BACKGROUND
         elevation = dp(2f)
         add(
@@ -69,12 +76,20 @@ class PopupEntryUi(override val ctx: Context, private val theme: Theme, keyHeigh
         )
     }
 
+    /** Re-applies the scheme colors, as pooled popups outlive scheme switches. */
+    fun refreshColors() {
+        popupBackground.setColor(scope.colors.popupBackColor)
+        textView.setTextColor(scope.colors.popupTextColor)
+        imageView.drawable?.colorFilter =
+            PorterDuffColorFilter(scope.colors.popupTextColor, PorterDuff.Mode.SRC_IN)
+    }
+
     fun setText(text: String) {
         if (text.isIconFont) {
             imageView.setImageDrawable(
                 IconicsDrawable(ctx, text.toIconName()).apply {
-                    sizeDp = theme.generalStyle.popupTextSize.toInt()
-                    colorFilter = PorterDuffColorFilter(ColorManager.getColor("popup_text_color"), PorterDuff.Mode.SRC_IN)
+                    sizeDp = theme.style.popupTextSize.toInt()
+                    colorFilter = PorterDuffColorFilter(scope.colors.popupTextColor, PorterDuff.Mode.SRC_IN)
                 },
             )
             imageView.isVisible = true

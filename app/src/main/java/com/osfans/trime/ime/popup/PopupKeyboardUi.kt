@@ -14,12 +14,10 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.utils.sizeDp
-import com.osfans.trime.data.theme.ColorManager
-import com.osfans.trime.data.theme.FontManager
-import com.osfans.trime.data.theme.KeyActionManager
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.ime.core.AutoScaleTextView
-import com.osfans.trime.ime.keyboard.KeyboardSwitcher
+import com.osfans.trime.ime.keyboard.KeyboardWindow
 import com.osfans.trime.ime.keyboard.isIconFont
 import com.osfans.trime.ime.keyboard.toIconName
 import splitties.dimensions.dp
@@ -40,7 +38,7 @@ import kotlin.math.roundToInt
 
 /**
  * @param ctx [Context]
- * @param theme [Theme]
+ * @param scope [ThemeScope]
  * @param outerBounds bound [Rect] of [PopupDelegate] root view.
  * @param triggerBounds bound [Rect] of popup trigger view. Used to calculate free space of both sides and
  * determine column order. See [focusColumn] and [columnOrder].
@@ -55,7 +53,7 @@ import kotlin.math.roundToInt
  */
 class PopupKeyboardUi(
     override val ctx: Context,
-    theme: Theme,
+    scope: ThemeScope,
     outerBounds: Rect,
     triggerBounds: Rect,
     onDismissSelf: PopupContainerUi.() -> Unit = {},
@@ -65,15 +63,18 @@ class PopupKeyboardUi(
     private val popupHeight: Int,
     private val keys: List<String>,
     private val labels: List<String>,
-) : PopupContainerUi(ctx, theme, outerBounds, triggerBounds, onDismissSelf) {
+) : PopupContainerUi(ctx, scope, outerBounds, triggerBounds, onDismissSelf) {
 
-    class PopupKeyUi(override val ctx: Context, val theme: Theme, val text: String) : Ui {
+    val theme: Theme get() = scope.theme
+
+    inner class PopupKeyUi(val text: String) : Ui {
+        override val ctx: Context = this@PopupKeyboardUi.ctx
 
         val textView = view(::AutoScaleTextView) {
             scaleMode = AutoScaleTextView.Mode.Proportional
-            textSize = theme.generalStyle.popupTextSize
-            setTextColor(ColorManager.getColor("popup_text_color"))
-            typeface = FontManager.getTypeface("POPUP_FONT")
+            textSize = theme.style.popupTextSize
+            setTextColor(scope.colors.popupTextColor)
+            typeface = theme.fonts.popup
         }
 
         val imageView = view(::AppCompatImageView) {}
@@ -97,8 +98,8 @@ class PopupKeyboardUi(
             if (text.isIconFont) {
                 imageView.setImageDrawable(
                     IconicsDrawable(ctx, text.toIconName()).apply {
-                        sizeDp = theme.generalStyle.popupTextSize.toInt()
-                        colorFilter = PorterDuffColorFilter(ColorManager.getColor("popup_text_color"), PorterDuff.Mode.SRC_IN)
+                        sizeDp = theme.style.popupTextSize.toInt()
+                        colorFilter = PorterDuffColorFilter(scope.colors.popupTextColor, PorterDuff.Mode.SRC_IN)
                     },
                 )
                 imageView.isVisible = true
@@ -113,12 +114,12 @@ class PopupKeyboardUi(
 
     private val inactiveBackground = GradientDrawable().apply {
         cornerRadius = radius
-        setColor(ColorManager.getColor("popup_back_color"))
+        setColor(scope.colors.popupBackColor)
     }
 
     private val focusBackground = GradientDrawable().apply {
         cornerRadius = radius
-        setColor(ColorManager.getColor("hilited_popup_back_color"))
+        setColor(scope.colors.hilitedPopupBackColor)
     }
 
     private val rowCount: Int
@@ -195,7 +196,7 @@ class PopupKeyboardUi(
             if (label.length == 1 && label[0].code < 128) {
                 label
             } else {
-                KeyActionManager.getAction(label).getLabel(KeyboardSwitcher.currentKeyboard).let {
+                theme.resolveAction(label).getLabel(KeyboardWindow.currentKeyboard).let {
                     when {
                         it.isIconFont -> it
                         it.isNotEmpty() -> String(Character.toChars(it.codePointAt(0)))
@@ -204,7 +205,7 @@ class PopupKeyboardUi(
                 }
             }
 
-        PopupKeyUi(ctx, theme, displayLabel)
+        PopupKeyUi(displayLabel)
     }
 
     init {
@@ -240,7 +241,7 @@ class PopupKeyboardUi(
     private fun markFocus(index: Int) {
         keyUis.getOrNull(index)?.apply {
             root.background = focusBackground
-            val color = ColorManager.getColor("hilited_popup_text_color")
+            val color = scope.colors.hilitedPopupTextColor
             textView.setTextColor(color)
             imageView.drawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
         }
@@ -249,9 +250,17 @@ class PopupKeyboardUi(
     private fun markInactive(index: Int) {
         keyUis.getOrNull(index)?.apply {
             root.background = null
-            val color = ColorManager.getColor("popup_text_color")
+            val color = scope.colors.popupTextColor
             textView.setTextColor(color)
             imageView.drawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        }
+    }
+
+    override fun refreshColors() {
+        inactiveBackground.setColor(scope.colors.popupBackColor)
+        focusBackground.setColor(scope.colors.hilitedPopupBackColor)
+        keyUis.forEachIndexed { index, _ ->
+            if (index == focusedIndex) markFocus(index) else markInactive(index)
         }
     }
 

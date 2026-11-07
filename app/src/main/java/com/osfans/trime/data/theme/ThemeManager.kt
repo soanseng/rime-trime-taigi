@@ -6,15 +6,17 @@
 package com.osfans.trime.data.theme
 
 import android.content.res.Configuration
-import com.osfans.trime.core.Rime
-import com.osfans.trime.data.base.DataManager
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
+import com.osfans.trime.core.data.DataManager
 import com.osfans.trime.data.prefs.AppPrefs
-import com.osfans.trime.ime.symbol.LiquidData
 import com.osfans.trime.util.WeakHashSet
-import com.osfans.trime.util.yaml.Yaml
-import com.osfans.trime.util.yaml.mapping
+import com.osfans.trime.util.appContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.File
 
 object ThemeManager {
     fun interface OnThemeChangeListener {
@@ -28,6 +30,19 @@ object ThemeManager {
     }
 
     private lateinit var _activeTheme: Theme
+
+    private var _activeFindings: List<ThemeDiagnostics.Finding>? = null
+
+    /**
+     * What static checks found in the active theme, or null when it was read
+     * from its deployed artifact and never checked. Serves the diagnostics
+     * screen: the findings belong to the load that produced the active theme.
+     */
+    val activeFindings: List<ThemeDiagnostics.Finding>?
+        get() {
+            ensureActiveTheme()
+            return _activeFindings
+        }
 
     private fun ensureActiveTheme() {
         if (!::_activeTheme.isInitialized) {
@@ -65,49 +80,39 @@ object ThemeManager {
     private data class ResolvedTheme(
         val configId: String,
         val theme: Theme,
+        val findings: List<ThemeDiagnostics.Finding>?,
     )
 
-    private fun loadThemeByIdOrNull(id: String): Theme? {
-        if (!Rime.deployRimeConfigFile(id, "config_version")) {
-            Timber.w("Failed to deploy theme config file '$id.yaml'")
-        }
-        val file = File(DataManager.resolveDeployedResourcePath(id))
-        if (!file.exists()) {
-            Timber.w("Theme file not found for '$id'")
-            return null
-        }
-        return try {
-            val node = Yaml.parseToYamlNode(file.readText())
-            val mapping = node.mapping
-            if (mapping == null) {
-                Timber.w("Failed to load theme '$id': YAML root is not a mapping")
-                null
-            } else {
-                Theme.decode(mapping)
-            }
-        } catch (e: Exception) {
-            Timber.w(e, "Failed to load theme '$id'")
-            null
-        }
-    }
-
     private fun getThemeById(id: String): ResolvedTheme {
-        loadThemeByIdOrNull(id)?.let { return ResolvedTheme(id, it) }
+        when (val result = ThemeLoader.loadTheme(id)) {
+            is ThemeLoader.ThemeLoadResult.Success -> return ResolvedTheme(id, result.theme, result.findings)
+            is ThemeLoader.ThemeLoadResult.Failure -> Timber.w(result.error)
+        }
 
         if (id != "trime") {
-            loadThemeByIdOrNull("trime")?.let {
-                Timber.w("Theme '$id' is unavailable, fallback to default theme 'trime'")
-                return ResolvedTheme("trime", it)
+            when (val result = ThemeLoader.loadTheme("trime")) {
+                is ThemeLoader.ThemeLoadResult.Success -> {
+                    Timber.w("Theme '$id' is unavailable, fallback to default theme 'trime'")
+                    return ResolvedTheme("trime", result.theme, result.findings)
+                }
+
+                is ThemeLoader.ThemeLoadResult.Failure -> Timber.w(result.error)
             }
         }
 
+        var lastFailure: ThemeLoader.ThemeLoadError? = null
         for (fallbackId in getAllThemes().map { it.configId }.distinct()) {
-            loadThemeByIdOrNull(fallbackId)?.let {
-                Timber.w("Theme '$id' is unavailable, fallback to available theme '$fallbackId'")
-                return ResolvedTheme(fallbackId, it)
+            when (val result = ThemeLoader.loadTheme(fallbackId)) {
+                is ThemeLoader.ThemeLoadResult.Success -> {
+                    Timber.w("Theme '$id' is unavailable, fallback to available theme '$fallbackId'")
+                    return ResolvedTheme(fallbackId, result.theme, result.findings)
+                }
+
+                is ThemeLoader.ThemeLoadResult.Failure -> lastFailure = result.error
             }
         }
 
+        Timber.w(lastFailure, "No valid theme available")
         error("No valid theme available")
     }
 
@@ -118,11 +123,22 @@ object ThemeManager {
         if (resolvedTheme.configId != selectedThemeId) {
             prefs.selectedTheme.setValue(resolvedTheme.configId)
         }
-        KeyActionManager.resetCache()
-        FontManager.resetCache(newTheme)
-        ColorManager.switchTheme(newTheme)
-        LiquidData.init(newTheme)
+        applyTheme(resolvedTheme)
         return newTheme
+    }
+
+    private fun applyTheme(resolvedTheme: ResolvedTheme) {
+        val theme = resolvedTheme.theme
+        // The findings describe the file this load read; they are not tied to the
+        // views, so they are refreshed even when the theme itself is unchanged.
+        _activeFindings = resolvedTheme.findings
+        // A structurally equal theme suppresses the change notification below, so the
+        // UI tree keeps its views and their injected scope. Replace neither the
+        // caches nor the scope in that case, or later scheme changes would update
+        // the new global scope while existing views still read the old one.
+        if (::_activeTheme.isInitialized && _activeTheme == theme) return
+        ColorManager.attachTheme(theme)
+        activeTheme = theme
     }
 
     fun init(configuration: Configuration) {
@@ -130,14 +146,28 @@ object ThemeManager {
         ColorManager.init(configuration)
     }
 
-    fun selectTheme(configId: String) {
-        val resolvedTheme = getThemeById(configId)
-        val theme = resolvedTheme.theme
-        KeyActionManager.resetCache()
-        FontManager.resetCache(theme)
-        ColorManager.switchTheme(theme)
-        LiquidData.init(theme)
-        activeTheme = theme
-        prefs.selectedTheme.setValue(resolvedTheme.configId)
+    /**
+     * Switches to theme [configId], falling back when it is unavailable.
+     * Loading runs on [Dispatchers.IO]; state changes and listener callbacks run on the main thread.
+     * @return the config id actually in effect; differs from [configId] when a fallback was used.
+     */
+    suspend fun selectTheme(configId: String): String {
+        val resolvedTheme = withContext(Dispatchers.IO) { getThemeById(configId) }
+        return withContext(Dispatchers.Main.immediate) {
+            applyTheme(resolvedTheme)
+            prefs.selectedTheme.setValue(resolvedTheme.configId)
+            resolvedTheme.configId
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun syncToDeviceEncryptedStorage() {
+        val ctx = appContext.createDeviceProtectedStorageContext()
+        val sp = PreferenceManager.getDefaultSharedPreferences(ctx)
+        sp.edit {
+            prefs.preferenceDelegates.forEach {
+                it.value.putValueTo(this@edit)
+            }
+        }
     }
 }

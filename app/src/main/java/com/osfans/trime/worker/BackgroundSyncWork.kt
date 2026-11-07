@@ -6,16 +6,16 @@
 package com.osfans.trime.worker
 
 import android.content.Context
+import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.osfans.trime.core.data.UserDataManager
 import com.osfans.trime.daemon.RimeDaemon
 import com.osfans.trime.data.prefs.AppPrefs
-import com.osfans.trime.data.sync.ExternalSyncFallback
-import com.osfans.trime.data.sync.RimeDataSync
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -37,14 +37,9 @@ class BackgroundSyncWork(
         if (!enable) {
             return Result.failure()
         }
-        if (RimeDataSync.usesExternalSync(applicationContext) &&
-            !RimeDataSync.hasExternalAccess(applicationContext)
-        ) {
-            ExternalSyncFallback.fallbackToAppStorage(applicationContext)
-        }
-        if (!RimeDataSync.isStorageAvailable(applicationContext)) {
+        if (!UserDataManager.isStorageAvailable()) {
             Timber.w("Background sync skipped: storage not available")
-            return Result.failure()
+            return Result.retry()
         }
         val rime = RimeDaemon.createSession(javaClass.name)
         try {
@@ -78,7 +73,8 @@ class BackgroundSyncWork(
             context: Context,
             policy: ExistingPeriodicWorkPolicy,
         ) {
-            val instance = WorkManager.getInstance(context.applicationContext)
+            WorkManager.initialize(context, Configuration.Builder().build())
+            val instance = WorkManager.getInstance(context)
             if (!enable) {
                 instance.cancelUniqueWork(PERIODIC_BACKGROUND_SYNC_KEY)
                 Timber.i("BackgroundSyncWork canceled!")

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2015 - 2024 Rime community
+// SPDX-FileCopyrightText: 2015 - 2026 Rime community
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,11 +22,11 @@ import com.osfans.trime.util.readText
 import com.osfans.trime.util.subprocess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import splitties.systemservices.notificationManager
+import timber.log.Timber
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -45,6 +45,7 @@ import kotlin.concurrent.withLock
  * Adapted from [fcitx5-android/FcitxDaemon.kt](https://github.com/fcitx5-android/fcitx5-android/blob/364afb44dcf0d9e3db3d43a21a32601b2190cbdf/app/src/main/java/org/fcitx/fcitx5/android/daemon/FcitxDaemon.kt)
  */
 object RimeDaemon {
+
     private val realRime by lazy { Rime() }
 
     private val rimeImpl by lazy { object : RimeApi by realRime {} }
@@ -87,6 +88,7 @@ object RimeDaemon {
             return@withLock sessions.getValue(name)
         }
         if (realRime.lifecycle.currentState == RimeLifecycle.State.STOPPED) {
+            Timber.d("RimeDaemon start rime")
             realRime.startup()
         }
         val session = establish(name)
@@ -100,6 +102,7 @@ object RimeDaemon {
         }
         sessions -= name
         if (sessions.isEmpty()) {
+            Timber.d("RimeDaemon stop rime")
             realRime.finalize()
         }
     }
@@ -156,6 +159,10 @@ object RimeDaemon {
         }
     }
 
+    fun stopRime() {
+        realRime.finalize()
+    }
+
     private suspend fun handleRimeMessage(it: RimeMessage<*>) {
         if (it is RimeMessage.DeployMessage) {
             when (it.data) {
@@ -163,9 +170,11 @@ object RimeDaemon {
                     DeployNotification.showProgress()
                     withContext(Dispatchers.IO) { subprocess("logcat", "--clear") }
                 }
+
                 RimeMessage.DeployMessage.State.Success -> {
                     DeployNotification.showSuccess()
                 }
+
                 RimeMessage.DeployMessage.State.Failure -> {
                     val intent =
                         Intent(appContext, LogActivity::class.java).apply {

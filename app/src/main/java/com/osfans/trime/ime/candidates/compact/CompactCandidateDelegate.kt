@@ -5,10 +5,10 @@
 
 package com.osfans.trime.ime.candidates.compact
 
-import android.content.Context
 import android.content.res.Configuration
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
+import android.view.ContextThemeWrapper
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -17,31 +17,34 @@ import com.osfans.trime.core.Candidates
 import com.osfans.trime.daemon.RimeSession
 import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.data.prefs.AppPrefs
-import com.osfans.trime.data.theme.ColorManager
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.ime.bar.InputBarDelegate
 import com.osfans.trime.ime.bar.UnrollButtonStateMachine
 import com.osfans.trime.ime.broadcast.InputBroadcastReceiver
 import com.osfans.trime.ime.candidates.unrolled.decoration.FlexboxVerticalDecoration
 import com.osfans.trime.ime.core.InputView
-import com.osfans.trime.ime.core.TrimeInputMethodService
-import com.osfans.trime.ime.dependency.InputDependencyManager
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import org.kodein.di.DI
+import org.kodein.di.DIAware
 import org.kodein.di.instance
 import splitties.dimensions.dp
 import splitties.views.dsl.recyclerview.recyclerView
 import kotlin.math.max
 
-class CompactCandidateDelegate : InputBroadcastReceiver {
-    private val di = InputDependencyManager.getInstance().di
-    private val context: Context by di.instance()
-    val service: TrimeInputMethodService by di.instance()
-    val rime: RimeSession by di.instance()
-    val theme: Theme by di.instance()
-    private val inputView: InputView by di.instance()
-    val bar: InputBarDelegate by di.instance()
+class CompactCandidateDelegate(override val di: DI) :
+    DIAware,
+    InputBroadcastReceiver {
+    private val context: ContextThemeWrapper by instance()
+    private val rime: RimeSession by instance()
+    private val scope: ThemeScope by instance()
+    private val inputView: InputView by instance()
+    private val bar: InputBarDelegate by instance()
+
+    private val theme: Theme
+        get() = scope.theme
 
     private val fillStyle by AppPrefs.defaultInstance().keyboard.horizontalCandidateMode
 
@@ -84,8 +87,14 @@ class CompactCandidateDelegate : InputBroadcastReceiver {
         )
     }
 
+    /** Restyles the compact list after a scheme switch; visible rows re-bind. */
+    fun refreshColors() {
+        separatorDrawable.paint.color = scope.colors.candidateSeparatorColor
+        adapter.notifyDataSetChanged()
+    }
+
     val adapter by lazy {
-        CompactCandidateViewAdapter(theme).apply {
+        CompactCandidateViewAdapter(scope).apply {
             setOnItemClickListener { _, _, position ->
                 rime.launchOnReady { it.selectCandidate(position, global = true) }
             }
@@ -133,11 +142,11 @@ class CompactCandidateDelegate : InputBroadcastReceiver {
 
     private val separatorDrawable by lazy {
         ShapeDrawable(RectShape()).apply {
-            val spacing = theme.generalStyle.candidateSpacing
+            val spacing = theme.style.candidateSpacing
             val intrinsicSize = max(spacing, context.dp(spacing)).toInt()
             intrinsicWidth = intrinsicSize
             intrinsicHeight = intrinsicSize
-            paint.color = ColorManager.getColor("candidate_separator_color")
+            paint.color = scope.colors.candidateSeparatorColor
         }
     }
 
@@ -175,6 +184,7 @@ class CompactCandidateDelegate : InputBroadcastReceiver {
                 layoutFlexGrow = 0f
                 secondLayoutPassNeeded = false
             }
+
             CompactCandidateMode.AUTO_FILL -> {
                 layoutMinWidth = view.width / maxSpanCount - separatorDrawable.intrinsicWidth
                 layoutFlexGrow = if (candidates.size < maxSpanCount) 0f else 1f
@@ -182,6 +192,7 @@ class CompactCandidateDelegate : InputBroadcastReceiver {
                 secondLayoutPassNeeded = candidates.size < maxSpanCount
                 secondLayoutPassDone = false
             }
+
             CompactCandidateMode.ALWAYS_FILL -> {
                 layoutMinWidth = 0
                 layoutFlexGrow = 1f

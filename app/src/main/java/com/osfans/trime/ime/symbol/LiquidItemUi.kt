@@ -6,9 +6,8 @@
 package com.osfans.trime.ime.symbol
 
 import android.content.Context
-import com.osfans.trime.data.theme.ColorManager
-import com.osfans.trime.data.theme.FontManager
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.ime.core.AutoScaleTextView
 import com.osfans.trime.ime.keyboard.GestureFrame
 import splitties.dimensions.dp
@@ -25,33 +24,47 @@ import splitties.views.setPaddingDp
 
 class LiquidItemUi(
     override val ctx: Context,
-    private val theme: Theme,
+    private val scope: ThemeScope,
 ) : Ui {
+    private val theme: Theme get() = scope.theme
+
     val mainText = view(::AutoScaleTextView) {
         isClickable = false
         isFocusable = false
         background = null
-        textSize = theme.generalStyle.keyTextSize
-        typeface = FontManager.getTypeface("key_font")
+        textSize = theme.style.keyTextSize
+        typeface = theme.fonts.key
         setPaddingDp(8, 4, 8, 4)
-        setTextColor(ColorManager.getColor("key_text_color"))
+        setTextColor(scope.colors.keyTextColor)
+    }
+
+    private val content = constraintLayout {
+        background = scope.decorDrawable(
+            "key_back_color",
+            "key_border_color",
+            dp(theme.style.keyBorder),
+            dp(theme.style.roundCorner),
+        )
+        add(
+            mainText,
+            lParams(wrapContent, wrapContent) {
+                centerInParent()
+            },
+        )
     }
 
     override val root = view(::GestureFrame) {
-        val content = constraintLayout {
-            background = ColorManager.getDecorDrawable(
-                "key_back_color",
-                "key_border_color",
-                dp(theme.generalStyle.keyBorder),
-                dp(theme.generalStyle.roundCorner),
-            )
-            add(
-                mainText,
-                lParams(wrapContent, wrapContent) {
-                    centerInParent()
-                },
-            )
-        }
         add(content, lParams(matchParent, matchParent))
+    }
+
+    /** Restyles the item after a scheme switch. */
+    fun refreshColors() {
+        mainText.setTextColor(scope.colors.keyTextColor)
+        content.background = scope.decorDrawable(
+            "key_back_color",
+            "key_border_color",
+            ctx.dp(theme.style.keyBorder),
+            ctx.dp(theme.style.roundCorner),
+        )
     }
 }

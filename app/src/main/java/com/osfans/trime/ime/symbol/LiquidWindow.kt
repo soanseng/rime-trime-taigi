@@ -13,7 +13,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.osfans.trime.daemon.RimeSession
 import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.data.SymbolHistory
-import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.data.theme.model.LiquidKeyboard
 import com.osfans.trime.ime.core.TrimeInputMethodService
 import com.osfans.trime.ime.keyboard.CommonKeyboardActionListener
@@ -21,36 +21,39 @@ import com.osfans.trime.ime.keyboard.KeyboardWindow
 import com.osfans.trime.ime.window.BoardWindow
 import com.osfans.trime.ime.window.BoardWindowManager
 import com.osfans.trime.ime.window.ResidentWindow
+import org.kodein.di.DI
 import org.kodein.di.instance
 
-class LiquidWindow :
-    BoardWindow.BarBoardWindow(),
+class LiquidWindow(di: DI) :
+    BoardWindow.BarBoardWindow(di),
     ResidentWindow {
     override val showTitle = false
 
-    private val service: TrimeInputMethodService by di.instance()
-    private val rime: RimeSession by di.instance()
-    private val theme: Theme by di.instance()
-    private val windowManager: BoardWindowManager by di.instance()
-    private val commonKeyboardActionListener: CommonKeyboardActionListener by di.instance()
+    private val service: TrimeInputMethodService by instance()
+    private val rime: RimeSession by instance()
+    private val scope: ThemeScope by instance()
+    private val windowManager: BoardWindowManager by instance()
+    private val commonKeyboardActionListener: CommonKeyboardActionListener by instance()
 
     private lateinit var liquidLayout: LiquidLayout
     private val symbolHistory = SymbolHistory(180)
-    var currentDataType: LiquidData.Type = LiquidData.Type.SINGLE
+    var currentDataType: LiquidKeyboard.DataType = LiquidKeyboard.DataType.SINGLE
         private set
 
     private val adapter by lazy {
-        LiquidAdapter(theme) {
+        LiquidAdapter(scope) {
             when (currentDataType) {
-                LiquidData.Type.SYMBOL -> triggerSymbolInput(this.altText)
-                LiquidData.Type.TABS -> {
-                    val realPosition = LiquidData.getTagList()
+                LiquidKeyboard.DataType.SYMBOL -> triggerSymbolInput(this.altText)
+
+                LiquidKeyboard.DataType.TABS -> {
+                    val realPosition = scope.theme.liquidKeyboard.getTagList()
                         .indexOfFirst { it.label == this.text }
                     setDataByIndex(realPosition)
                 }
+
                 else -> {
                     service.commitText(this.text)
-                    if (currentDataType != LiquidData.Type.HISTORY) {
+                    if (currentDataType != LiquidKeyboard.DataType.HISTORY) {
                         symbolHistory.insert(this.text)
                         symbolHistory.save()
                     }
@@ -71,10 +74,10 @@ class LiquidWindow :
     override val key: ResidentWindow.Key
         get() = LiquidWindow
 
-    override fun onCreateView(): View = LiquidLayout(context, theme, commonKeyboardActionListener).apply {
+    override fun onCreateView(): View = LiquidLayout(context, scope, commonKeyboardActionListener).apply {
         liquidLayout = this
         tabsUi.apply {
-            setTags(LiquidData.getTagList())
+            setTags(scope.theme.liquidKeyboard.getTagList())
             setOnTabClickListener { i ->
                 setDataByIndex(i)
             }
@@ -91,17 +94,22 @@ class LiquidWindow :
 
     override fun onDetached() {}
 
+    override fun refreshColors() {
+        if (::liquidLayout.isInitialized) liquidLayout.refreshColors()
+    }
+
     fun setDataByIndex(i: Int) {
-        val tag = LiquidData.getTagList()[i]
+        val tag = scope.theme.liquidKeyboard.getTagList()[i]
         currentDataType = tag.type
         liquidLayout.tabsUi.activateTab(i)
         when (tag.type) {
-            LiquidData.Type.HISTORY -> {
+            LiquidKeyboard.DataType.HISTORY -> {
                 symbolHistory.load()
                 submitData(symbolHistory.toOrderedList().map { LiquidKeyboard.KeyItem(it) })
             }
+
             else -> {
-                val data = LiquidData.getDataByIndex(i)
+                val data = scope.theme.liquidKeyboard.getDataByIndex(i)
                 submitData(data)
             }
         }
@@ -115,10 +123,10 @@ class LiquidWindow :
         rime.launchOnReady {
             val (isAsciiMode, isAsciiPunch) = it.statusCached.run { isAsciiMode to isAsciiPunct }
             if (isAsciiMode) it.setRuntimeOption("ascii_mode", false)
-            if (isAsciiPunch) it.setRuntimeOption("ascii_punch", false)
+            if (isAsciiPunch) it.setRuntimeOption("ascii_punct", false)
             it.clearComposition()
             it.simulateKeySequence(symbol)
-            if (isAsciiPunch) it.setRuntimeOption("ascii_punch", true)
+            if (isAsciiPunch) it.setRuntimeOption("ascii_punct", true)
             ContextCompat.getMainExecutor(service).execute {
                 windowManager.attachWindow(KeyboardWindow)
             }

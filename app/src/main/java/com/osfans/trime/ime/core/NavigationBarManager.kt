@@ -10,7 +10,7 @@ import android.os.Build
 import android.view.Window
 import androidx.annotation.ColorInt
 import androidx.core.view.WindowCompat
-import com.osfans.trime.data.theme.ColorManager
+import com.osfans.trime.data.theme.ThemeColors
 import com.osfans.trime.data.theme.ThemeManager
 import com.osfans.trime.data.theme.ThemePrefs
 import com.osfans.trime.util.ColorUtils
@@ -29,15 +29,15 @@ class NavigationBarManager {
         }
     }
 
+    /**
+     * Why on earth does it deprecated? It says
+     * https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-15.0.0_r3/core/java/android/view/Window.java#2720
+     * "If the app targets VANILLA_ICE_CREAM or above, the color will be transparent and cannot be changed"
+     * but it only takes effect on API 35+ devices. Older devices still needs this.
+     */
     private fun Window.setNavbarBackgroundColor(
         @ColorInt color: Int,
     ) {
-        /**
-         * Why on earth does it deprecated? It says
-         * https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-15.0.0_r3/core/java/android/view/Window.java#2720
-         * "If the app targets VANILLA_ICE_CREAM or above, the color will be transparent and cannot be changed"
-         * but it only takes effect on API 35+ devices. Older devices still needs this.
-         */
         @Suppress("DEPRECATION")
         navigationBarColor = color
     }
@@ -56,12 +56,14 @@ class NavigationBarManager {
                 window.useSystemNavbarBackground(true)
                 window.enforceNavbarContrast(true)
             }
+
             ThemePrefs.NavbarBackground.COLOR_ONLY -> {
                 shouldUpdateNavbarForeground = true
                 shouldUpdateNavbarBackground = true
                 window.useSystemNavbarBackground(true)
                 window.enforceNavbarContrast(false)
             }
+
             ThemePrefs.NavbarBackground.FULL -> {
                 shouldUpdateNavbarForeground = true
                 shouldUpdateNavbarBackground = false
@@ -79,6 +81,7 @@ class NavigationBarManager {
     fun evaluate(
         window: Window,
         useVirtualKeyboard: Boolean,
+        colors: ThemeColors,
     ) {
         if (useVirtualKeyboard) {
             evaluateWithVirtualKeyboard(window)
@@ -88,13 +91,16 @@ class NavigationBarManager {
             window.useSystemNavbarBackground(true)
             window.enforceNavbarContrast(false)
         }
-        update(window)
+        update(window, colors)
     }
 
-    private fun update(window: Window) {
+    private fun update(
+        window: Window,
+        colors: ThemeColors,
+    ) {
         val backColor =
             runCatching {
-                ColorManager.getColor("back_color")
+                colors.backColor
             }.getOrDefault(Color.BLACK)
         if (shouldUpdateNavbarForeground) {
             WindowCompat

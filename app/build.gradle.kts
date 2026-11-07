@@ -27,13 +27,13 @@ val taigiVersionCode: Int =
 
 android {
     namespace = "com.osfans.trime"
-    compileSdk = 36
-    buildToolsVersion = "36.0.0"
+    compileSdk = 37
+    buildToolsVersion = "37.0.0"
 
     defaultConfig {
         applicationId = "com.soanseng.phahtaibun" // 拍台文特化版: 與官方同文可並存
         minSdk = 21
-        targetSdk = 36
+        targetSdk = 37
         versionCode = taigiVersionCode
         versionName = taigiVersion
 
@@ -91,11 +91,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    // hack workaround lint gradle 8.0.2
-    lint {
-        checkReleaseBuilds = false
     }
 
     testOptions {
@@ -191,7 +186,8 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.xxpermissions)
     implementation(libs.kodein.di)
-    implementation(libs.snakeyaml)
+    implementation(libs.kaml)
+    implementation(libs.storageaccess)
     implementation(libs.splitties.bitflags)
     implementation(libs.splitties.systemservices)
     implementation(libs.splitties.views.dsl)

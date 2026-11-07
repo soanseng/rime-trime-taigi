@@ -146,7 +146,6 @@
     <string name="use_app_specific_storage_desc">直接用 app 內部私有的儲存空間，使用者愛有相容的檔案管理程式才會使管理資料。解除安裝 app 的時，系統可能會問欲保留資料無，平常時就愛做好備份。</string>
     <string name="external_sync_select_folder_message">外部同步愛揀一个資料夾。請揀欲放 Trime 設定檔的位置。</string>
     <string name="external_sync_fallback_app_storage">資料夾揀失敗抑是取消矣，儲存模式會轉做用 app 專用的儲存空間。</string>
-    <string name="external_sync_missing_tree_fallback">外部資料夾無去抑是無法度存取，已經切換做 app 專用的儲存空間。若需要外部同步，請佇設定內閣揀資料夾。</string>
     <string name="maintenance">維護</string>
     <string name="loading">正咧載入</string>
     <string name="success">成功</string>
@@ -176,14 +175,10 @@
     <string name="setup__data_path_import_failed">資料夾匯入失敗</string>
     <string name="select_another_directory_to_sync">敢欲揀另外一個資料夾來同步？</string>
     <string name="select_another_directory">換別的</string>
-    <string name="reset_data_path_cancelled_message">無揀著資料夾。外部同步需要一個資料夾，請閣揀一擺，抑是切換做 app 專用的儲存空間。</string>
-    <string name="reset_data_path_pick_again">閣揀一擺資料夾</string>
     <string name="data_path_not_selected">猶未揀資料夾</string>
     <string name="sync_user_data_success">使用者資料同步成功</string>
     <string name="sync_user_data_success_external">使用者資料已經同步到外部資料夾</string>
     <string name="sync_user_data_failure">使用者資料同步失敗</string>
-    <string name="sync_partial_copy_failure">有部分檔案複製失敗</string>
-    <string name="sync_partial_copy_failure_detail">%2$s 的時有 %1$d 个檔案複製失敗。其他的檔案已經複製，部署會使繼續。</string>
     <string name="data_path_permission_revoked">資料夾的存取權限已經予人撤銷，請閣揀一擺資料夾。</string>
     <string name="grant_permission">予權限</string>
     <string name="notification_permission_title">無通知權限</string>
@@ -272,4 +267,9 @@
     <string name="word_segment">分詞</string>
     <string name="star_success">收藏成功矣</string>
     <string name="ignore_system_gesture_insets">忽略系統手勢的內縮邊界</string>
+    <string name="theme_diagnostics">主題診斷</string>
+    <string name="theme_diagnostics_summary">檢查這馬的主題有啥物設定予程式略過抑是解析袂來</string>
+    <string name="theme_diagnostics_no_findings">這馬的主題無揣著問題</string>
+    <string name="theme_diagnostics_unchecked">這个主題無法度做靜態檢查</string>
+    <string name="theme_unavailable_fallback">主題「%1$s」袂用得，已經換做「%2$s」。</string>
 </resources>

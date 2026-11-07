@@ -9,9 +9,9 @@ import android.graphics.Color
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.osfans.trime.data.theme.ColorManager
-import com.osfans.trime.data.theme.FontManager
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
+import com.osfans.trime.data.theme.model.LiquidKeyboard
 import com.osfans.trime.ime.keyboard.GestureFrame
 import com.osfans.trime.util.roundedRippleDrawable
 import splitties.dimensions.dp
@@ -29,20 +29,19 @@ import splitties.views.recyclerview.horizontalLayoutManager
 
 class LiquidTabsUi(
     override val ctx: Context,
-    val theme: Theme,
+    private val scope: ThemeScope,
 ) : Ui {
+    private val theme: Theme get() = scope.theme
+
     inner class TabUi : Ui {
         override val ctx = this@LiquidTabsUi.ctx
-        private val textColor = ColorManager.getColor("candidate_text_color")
-        private val hlTextColor = ColorManager.getColor("hilited_candidate_text_color")
-        private val hlBackColor = ColorManager.getColor("hilited_candidate_back_color")
-        private val cornerRadius = ctx.dp(theme.generalStyle.candidateCornerRadius)
+        private val cornerRadius = ctx.dp(theme.style.candidateCornerRadius)
 
         val text =
             textView {
-                textSize = theme.generalStyle.candidateTextSize
-                typeface = FontManager.getTypeface("candidate_font")
-                setTextColor(textColor)
+                textSize = theme.style.candidateTextSize
+                typeface = theme.fonts.candidate
+                setTextColor(scope.colors.candidateTextColor)
             }
 
         override val root =
@@ -52,10 +51,11 @@ class LiquidTabsUi(
                     text,
                     lParams {
                         gravity = gravityCenter
-                        horizontalPadding = dp(theme.generalStyle.candidatePadding)
+                        horizontalPadding = dp(theme.style.candidatePadding)
                     },
                 )
-                background = roundedRippleDrawable(hlBackColor, cornerRadius)
+                background =
+                    roundedRippleDrawable(scope.colors.hilitedCandidateBackColor, cornerRadius)
             }
 
         fun setText(str: String) {
@@ -63,10 +63,13 @@ class LiquidTabsUi(
         }
 
         fun setActive(active: Boolean) {
-            val color = if (active) hlTextColor else textColor
-            val contentColor = if (active) hlBackColor else Color.TRANSPARENT
+            val color =
+                if (active) scope.colors.hilitedCandidateTextColor else scope.colors.candidateTextColor
+            val contentColor =
+                if (active) scope.colors.hilitedCandidateBackColor else Color.TRANSPARENT
             text.setTextColor(color)
-            root.background = roundedRippleDrawable(hlBackColor, cornerRadius, contentColor)
+            root.background =
+                roundedRippleDrawable(scope.colors.hilitedCandidateBackColor, cornerRadius, contentColor)
         }
     }
 
@@ -77,7 +80,7 @@ class LiquidTabsUi(
     ) : RecyclerView.ViewHolder(ui.root)
 
     private val adapter by lazy {
-        object : BaseQuickAdapter<LiquidData.Tag, TabUiHolder>() {
+        object : BaseQuickAdapter<LiquidKeyboard.Tag, TabUiHolder>() {
             private var selected = -1
 
             override fun onCreateViewHolder(
@@ -89,7 +92,7 @@ class LiquidTabsUi(
             override fun onBindViewHolder(
                 holder: TabUiHolder,
                 position: Int,
-                item: LiquidData.Tag?,
+                item: LiquidKeyboard.Tag?,
             ) {
                 holder.ui.apply {
                     setText(item!!.label)
@@ -100,7 +103,7 @@ class LiquidTabsUi(
                 }
             }
 
-            override fun submitList(list: List<LiquidData.Tag>?, commitCallback: Runnable?) {
+            override fun submitList(list: List<LiquidKeyboard.Tag>?, commitCallback: Runnable?) {
                 selected = -1
                 super.submitList(list, commitCallback)
             }
@@ -126,7 +129,7 @@ class LiquidTabsUi(
             isHorizontalScrollBarEnabled = false
         }
 
-    fun setTags(tags: List<LiquidData.Tag>) {
+    fun setTags(tags: List<LiquidKeyboard.Tag>) {
         adapter.submitList(tags)
     }
 
@@ -137,5 +140,10 @@ class LiquidTabsUi(
 
     fun setOnTabClickListener(listener: ((Int) -> Unit)? = null) {
         onTabClick = listener
+    }
+
+    /** Restyles the tabs after a scheme switch; rows re-apply colors on rebind. */
+    fun refreshColors() {
+        adapter.notifyDataSetChanged()
     }
 }

@@ -46,8 +46,6 @@ constructor(
 
     var scaleMode = Mode.None
 
-    private lateinit var text: CharSequence
-
     private var needsMeasureText = true
     private val fontMetrics = Paint.FontMetrics()
     private val textBounds = Rect()
@@ -62,22 +60,20 @@ constructor(
         charSequence: CharSequence?,
         bufferType: BufferType,
     ) {
-        // setText can be called in super constructor
-        if (!::text.isInitialized || charSequence == null || !text.contentEquals(charSequence)) {
-            needsMeasureText = true
-            needsCalculateTransform = true
-            text = charSequence ?: ""
-            requestLayout()
-            invalidate()
-        }
+        super.setText(charSequence, bufferType)
+        // TextView also calls this from its constructor, before our paint caches exist.
+        needsMeasureText = true
+        needsCalculateTransform = true
+        requestLayout()
+        invalidate()
     }
-
-    override fun getText(): CharSequence = text
 
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
     ) {
+        // Update the framework Layout for accessibility before our custom measurement.
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
@@ -184,11 +180,13 @@ constructor(
                     textScaleY = 1.0f
                     translateX = calculateTranslateX(contentWidth, textWidth, 1.0f, shouldAlignLeft)
                 }
+
                 Mode.Horizontal -> {
                     textScaleX = contentWidth.toFloat() / textWidth.toFloat()
                     textScaleY = 1.0f
                     translateX = calculateTranslateX(contentWidth, textWidth, textScaleX, shouldAlignLeft)
                 }
+
                 Mode.Proportional -> {
                     val textXScale = contentWidth.toFloat() / textWidth.toFloat()
                     val textYScale = contentHeight.toFloat() / textHeight.toFloat()

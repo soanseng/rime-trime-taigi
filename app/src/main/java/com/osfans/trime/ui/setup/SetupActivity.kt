@@ -7,12 +7,10 @@ package com.osfans.trime.ui.setup
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.os.bundleOf
@@ -25,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.osfans.trime.R
-import com.osfans.trime.data.sync.RimeDataSync
+import com.osfans.trime.core.data.UserDataManager
 import com.osfans.trime.databinding.ActivitySetupBinding
 import com.osfans.trime.ui.main.MainActivity
 import com.osfans.trime.ui.setup.SetupPage.Companion.firstUndonePage
@@ -34,6 +32,7 @@ import com.osfans.trime.util.appContext
 import com.osfans.trime.util.createNotificationChannel
 import com.osfans.trime.util.startActivity
 import com.osfans.trime.util.toast
+import io.github.whiredplanck.storageaccess.StorageAccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,30 +45,26 @@ class SetupActivity : FragmentActivity() {
     private lateinit var prevButton: Button
     private lateinit var nextButton: Button
 
-    private val dataPathPicker =
-        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-            if (uri == null) return@registerForActivityResult
-            lifecycleScope.launch {
-                runCatching {
-                    withContext(Dispatchers.IO) {
-                        RimeDataSync.persistTreeUri(this@SetupActivity, uri)
-                        RimeDataSync.importToLocal(this@SetupActivity).getOrThrow()
-                    }
-                    refreshCurrentFragment()
-                    toast(R.string.setup__data_path_imported)
-                    skipButton.visibility = View.VISIBLE
-                }.onFailure {
-                    withContext(Dispatchers.IO) {
-                        RimeDataSync.clearExternalTree(this@SetupActivity)
-                    }
-                    refreshCurrentFragment()
-                    toast(R.string.setup__data_path_import_failed)
-                }
+    private val storageAccess = StorageAccess(this)
+
+    fun pickDataPath() {
+        lifecycleScope.launch {
+            val picked = storageAccess.pickDirectory() ?: return@launch
+            runCatching {
+                UserDataManager.persistTreeUri(picked.uri)
+                check(UserDataManager.sync())
+                refreshCurrentFragment()
+                updateButtons()
+                toast(R.string.setup__data_path_imported)
+                skipButton.visibility = View.VISIBLE
+            }.onFailure {
+                // Keep the picked folder: the user is not forced to pick again, and a folder that
+                // keeps failing makes the deploy path fall back to app-specific storage on its own.
+                refreshCurrentFragment()
+                updateButtons()
+                toast(R.string.setup__data_path_import_failed)
             }
         }
-
-    fun launchDataPathPicker() {
-        dataPathPicker.launch(null as Uri?)
     }
 
     fun refreshCurrentFragment() {

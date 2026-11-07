@@ -4,17 +4,19 @@
  */
 package com.osfans.trime.ime.popup
 
-import android.content.Context
 import android.graphics.Rect
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.ime.core.TrimeInputMethodService
-import com.osfans.trime.ime.dependency.InputDependencyManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.kodein.di.DI
+import org.kodein.di.DIAware
 import org.kodein.di.instance
 import splitties.dimensions.dp
 import splitties.views.dsl.core.add
@@ -22,10 +24,11 @@ import splitties.views.dsl.core.frameLayout
 import splitties.views.dsl.core.lParams
 import java.util.LinkedList
 
-class PopupDelegate {
-    private val context: Context by InputDependencyManager.getInstance().di.instance()
-    private val theme: Theme by InputDependencyManager.getInstance().di.instance()
-    private val service: TrimeInputMethodService by InputDependencyManager.getInstance().di.instance()
+class PopupDelegate(override val di: DI) : DIAware {
+    private val context: ContextThemeWrapper by instance()
+    private val scope: ThemeScope by instance()
+    private val theme: Theme get() = scope.theme
+    private val service: TrimeInputMethodService by instance()
 
     private val showingEntryUi = HashMap<Int, PopupEntryUi>()
     private val dismissJobs = HashMap<Int, Job>()
@@ -34,19 +37,19 @@ class PopupDelegate {
     private val showingContainerUi = HashMap<Int, PopupContainerUi>()
 
     private val popupBottomMargin by lazy {
-        context.dp(theme.generalStyle.popupBottomMargin)
+        context.dp(theme.style.popupBottomMargin)
     }
     private val popupWidth by lazy {
-        context.dp(theme.generalStyle.popupWidth)
+        context.dp(theme.style.popupWidth)
     }
     private val popupHeight by lazy {
-        context.dp(theme.generalStyle.popupHeight)
+        context.dp(theme.style.popupHeight)
     }
     private val popupKeyHeight by lazy {
-        context.dp(theme.generalStyle.popupKeyHeight)
+        context.dp(theme.style.popupKeyHeight)
     }
     private val popupRadius by lazy {
-        context.dp(theme.generalStyle.roundCorner)
+        context.dp(theme.style.roundCorner)
     }
     private val hideThreshold = 100L
 
@@ -80,7 +83,7 @@ class PopupDelegate {
         }
         val popup = (
             freeEntryUi.poll()
-                ?: PopupEntryUi(context, theme, popupKeyHeight, popupRadius)
+                ?: PopupEntryUi(context, scope, popupKeyHeight, popupRadius)
             ).apply {
             lastShowTime = System.currentTimeMillis()
             setText(content)
@@ -119,7 +122,7 @@ class PopupDelegate {
         val labels = keys
         val keyboardUi = PopupKeyboardUi(
             context,
-            theme,
+            scope,
             rootBounds,
             bounds,
             { dismissPopup(viewId) },
@@ -197,6 +200,13 @@ class PopupDelegate {
             freeEntryUi.add(entry)
         }
         showingEntryUi.clear()
+    }
+
+    /** Re-applies the scheme colors to all popups, pooled or showing. */
+    fun refreshColors() {
+        freeEntryUi.forEach { it.refreshColors() }
+        showingEntryUi.values.forEach { it.refreshColors() }
+        showingContainerUi.values.forEach { it.refreshColors() }
     }
 
     val listener = PopupActionListener { action ->

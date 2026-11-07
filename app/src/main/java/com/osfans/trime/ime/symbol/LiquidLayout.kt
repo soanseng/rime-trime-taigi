@@ -9,8 +9,8 @@ import android.content.Context
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.setPadding
-import com.osfans.trime.data.theme.KeyActionManager
 import com.osfans.trime.data.theme.Theme
+import com.osfans.trime.data.theme.ThemeScope
 import com.osfans.trime.data.theme.model.LiquidKeyboard
 import com.osfans.trime.ime.keyboard.CommonKeyboardActionListener
 import splitties.dimensions.dp
@@ -41,10 +41,15 @@ import splitties.views.dsl.recyclerview.recyclerView
 @SuppressLint("ViewConstructor")
 class LiquidLayout(
     context: Context,
-    theme: Theme,
+    private val scope: ThemeScope,
     commonKeyboardActionListener: CommonKeyboardActionListener,
 ) : ConstraintLayout(context) {
+    private val theme: Theme get() = scope.theme
+
     // TODO: 继承一个键盘视图嵌入到这里，而不是自定义一个视图
+    // The fixed-key items, kept so their colors can be refreshed on scheme switches.
+    private val fixedKeyItems = mutableListOf<LiquidItemUi>()
+
     private val fixedKeyBar =
         constraintLayout {
             val fixedKeys =
@@ -54,13 +59,14 @@ class LiquidLayout(
                     Array(fixedKeys.size) { index ->
                         val presetKeyName = fixedKeys[index]
                         val presetKey = theme.presetKeys[presetKeyName]
-                        val ui = LiquidItemUi(context, theme)
+                        val ui = LiquidItemUi(context, scope)
+                        fixedKeyItems += ui
                         ui.mainText.text = presetKey?.label ?: ""
                         ui.root.apply {
                             isRepeatable = presetKey?.repeatable ?: false
                             onClick = {
                                 commonKeyboardActionListener.listener.onAction(
-                                    KeyActionManager.getAction(presetKeyName),
+                                    theme.resolveAction(presetKeyName),
                                 )
                             }
                         }
@@ -91,6 +97,7 @@ class LiquidLayout(
                             )
                         }
                     }
+
                     LiquidKeyboard.KeyBar.Position.TOP,
                     LiquidKeyboard.KeyBar.Position.BOTTOM,
                     -> {
@@ -129,7 +136,7 @@ class LiquidLayout(
         add(recyclerView, lParams(matchParent, matchParent))
     }
 
-    val tabsUi = LiquidTabsUi(context, theme)
+    val tabsUi = LiquidTabsUi(context, scope)
 
     init {
         when (theme.liquidKeyboard.fixedKeyBar.position) {
@@ -151,6 +158,7 @@ class LiquidLayout(
                     },
                 )
             }
+
             LiquidKeyboard.KeyBar.Position.BOTTOM -> {
                 add(
                     root,
@@ -169,6 +177,7 @@ class LiquidLayout(
                     },
                 )
             }
+
             LiquidKeyboard.KeyBar.Position.LEFT -> {
                 add(
                     root,
@@ -187,6 +196,7 @@ class LiquidLayout(
                     },
                 )
             }
+
             LiquidKeyboard.KeyBar.Position.RIGHT -> {
                 add(
                     root,
@@ -206,5 +216,11 @@ class LiquidLayout(
                 )
             }
         }
+    }
+
+    fun refreshColors() {
+        fixedKeyItems.forEach { it.refreshColors() }
+        tabsUi.refreshColors()
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 }

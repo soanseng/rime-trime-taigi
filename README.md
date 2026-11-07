@@ -10,7 +10,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 [![Release](https://img.shields.io/github/v/release/soanseng/rime-trime-taigi.svg)](https://github.com/soanseng/rime-trime-taigi/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-**Android 台語輸入法**，分支（branch）自 [Trime 同文輸入法](https://github.com/osfans/trime) [v3.3.12](https://github.com/osfans/trime/tree/v3.3.12)。本倉庫沿用上游完整 git 歷史，分支點之後的調整全部列在下面〈[我們的調整與設定](#我們的調整與設定相對上游-v3312)〉。
+**Android 台語輸入法**，分支（branch）自 [Trime 同文輸入法](https://github.com/osfans/trime) [v3.3.13](https://github.com/osfans/trime/tree/v3.3.13)。本倉庫沿用上游完整 git 歷史，分支點之後的調整全部列在下面〈[我們的調整與設定](#我們的調整與設定相對上游-v3313)〉。
 
 - 🌐 網站：**<https://taigi.anatomind.com>**
 - 📖 完整使用說明：<https://taigi.anatomind.com/guide#/>
@@ -23,7 +23,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 輸入方案與詞典來源：[soanseng/rime-phah-taibun](https://github.com/soanseng/rime-phah-taibun)（MIT）。嘸蝦米檔案集之來源與授權標示見 APK 內 `LIUR-PROVENANCE.txt`、`THIRD-PARTY-NOTICES.txt`。
 
-## 我們的調整與設定（相對上游 v3.3.12）
+## 我們的調整與設定（相對上游 v3.3.13）
 
 ### 輸入方案與行為
 

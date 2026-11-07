@@ -19,7 +19,6 @@ import kotlin.concurrent.withLock
 object DataManager {
     private const val DATA_CHECKSUMS_NAME = "checksums.json"
 
-
     private val lock = ReentrantLock()
 
     private val json by lazy { Json }

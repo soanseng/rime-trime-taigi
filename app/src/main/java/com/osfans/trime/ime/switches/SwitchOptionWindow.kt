@@ -133,6 +133,7 @@ class SwitchOptionWindow(di: DI) :
                                 r.commitComposition()
                             }
                         }
+
                         SwitchOptionEntry.Static.Type.TaigiGuide -> AppUtils.launchMainToTaigiGuide(context)
                     }
 
